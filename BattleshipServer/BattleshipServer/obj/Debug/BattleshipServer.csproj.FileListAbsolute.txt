@@ -1,0 +1,6 @@
+C:\Users\Randy\Desktop\Fall17\Comp426\426Final\BattleshipServer\BattleshipServer\bin\Debug\BattleshipServer.exe.config
+C:\Users\Randy\Desktop\Fall17\Comp426\426Final\BattleshipServer\BattleshipServer\bin\Debug\BattleshipServer.exe
+C:\Users\Randy\Desktop\Fall17\Comp426\426Final\BattleshipServer\BattleshipServer\bin\Debug\BattleshipServer.pdb
+C:\Users\Randy\Desktop\Fall17\Comp426\426Final\BattleshipServer\BattleshipServer\obj\Debug\BattleshipServer.csprojResolveAssemblyReference.cache
+C:\Users\Randy\Desktop\Fall17\Comp426\426Final\BattleshipServer\BattleshipServer\obj\Debug\BattleshipServer.exe
+C:\Users\Randy\Desktop\Fall17\Comp426\426Final\BattleshipServer\BattleshipServer\obj\Debug\BattleshipServer.pdb
