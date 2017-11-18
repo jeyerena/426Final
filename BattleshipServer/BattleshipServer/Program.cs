@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 using System.IO;
+using System.Collections.Generic;
 
 namespace BattleshipServer
 {
@@ -12,6 +13,8 @@ namespace BattleshipServer
 	{
 		static void Main(string[] args)
 		{
+			Dictionary<int, GameInstance> games;
+
 			var web = new HttpListener();
 			web.Prefixes.Add("http://localhost:80/");
 			Console.WriteLine("Listening..");
@@ -20,12 +23,20 @@ namespace BattleshipServer
 			HttpListenerContext context = web.GetContext();
 			HttpListenerRequest request = context.Request;
 			HttpListenerResponse response = context.Response;
-			String dataType = request.ContentType;
 
 			StreamReader reader = new StreamReader(request.InputStream, Encoding.UTF8);
-			Console.WriteLine($"HTTP Method: {request.HttpMethod}");
-			Console.WriteLine($"Header: {request.Headers}");
-			Console.WriteLine($"Content: {reader.ReadToEnd()}");
+			Console.WriteLine($"HTTP Method:\n{request.HttpMethod}");
+			Console.WriteLine($"Header:\n{request.Headers}");
+
+			bool isNewGameRequest;
+			if (bool.TryParse(request.Headers.Get("New-Game"), out isNewGameRequest) && isNewGameRequest)
+			{
+
+			}
+			else
+			{
+
+			}
 
 			const string responseString = "<html><body>Hello world</body></html>";
 			byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
