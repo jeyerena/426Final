@@ -1,7 +1,7 @@
 ﻿using System;
 using BattleshipServer;
 
-namespace BattleShipServer
+namespace BattleshipServer
 {
 	public class GameInstance
 	{
