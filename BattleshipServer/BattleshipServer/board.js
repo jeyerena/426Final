@@ -27,10 +27,27 @@ $(document).ready(function () {
         var div = document.getElementById('bCreation');
         div.style.visibility = "hidden";
         div.style.display = "none";
-        drag()
+  //      drag()
+        var table = document.getElementById('table-topmiddle');
+        var cells = table.getElementsByTagName('td');
+        for (var i = 0; i < cells.length; i++) {
+            var cell = cells[i];
+            console.log(cell.id);
+            cell.onclick = selected;
+        }
     };
 
-    function drag() {
+    function selected() {
+        this.className = 'w3-red';
+        var cell = JSON.stringify(this.id);
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("POST", "/json-handler");
+        xmlhttp.setRequestHeader("Content-Type", "application/json");
+        xmlhttp.send(cell);
+        this.className = ''
+    }
+
+  /*  function drag() {
         var isMouseDown = false,
             isHighlighted;
         var startCell, endCell;
@@ -73,7 +90,5 @@ $(document).ready(function () {
             .mouseup(function () {
                 isMouseDown = false;
             });
-    }
-
-    var table = document.getElementById('table');
+    }*/
 });
