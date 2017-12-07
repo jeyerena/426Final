@@ -1,4 +1,9 @@
 $(document).ready(function () {
+    var minX = 5;
+    var maxX = 20;
+    var minY = 5;
+    var maxY = 20;
+
     function tableCreate(num, position) {
         var body = document.getElementById('board');
         var tbl = document.createElement('table');
@@ -39,56 +44,13 @@ $(document).ready(function () {
 
     function selected() {
         this.className = 'w3-red';
+        var cell = []
+        cell.push(this.id.split(',')[0])
         var cell = JSON.stringify(this.id);
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.open("POST", "/json-handler");
         xmlhttp.setRequestHeader("Content-Type", "application/json");
         xmlhttp.send(cell);
-        this.className = ''
+  //      this.className = '';
     }
-
-  /*  function drag() {
-        var isMouseDown = false,
-            isHighlighted;
-        var startCell, endCell;
-        $("#table-middle td")
-            .mousedown(function () {
-                isMouseDown = true;
-                startCell = this;
-                $(this).toggleClass("w3-red");
-                isHighlighted = $(this).hasClass("w3-red");
-                return false;
-            })
-            .mouseover(function () {
-                if (isMouseDown) {
-                    endCell = this;
-                    var startX = startCell.id.split(',')[0]
-                    var startY = startCell.id.split(',')[1]
-                    var endX = endCell.id.split(',')[0]
-                    var endY = endCell.id.split(',')[1]
-                    if (endX < startX) {
-                        var tmp = startX;
-                        startX = endX;
-                        endX = tmp;
-                    }
-                    if (endY < startY) {
-                        var tmp = startY;
-                        startY = endY;
-                        endY = tmp;
-                    }
-                    for (i = startX; i <= endX; i++) {
-                        for (j = startY; j <= endY; j++) {
-                            var cellID = i + ',' + j;
-                            var highlightedCell = document.getElementById(cellID);
-                            $(highlightedCell).toggleClass("w3-red", isHighlighted);
-                        }
-                    }
-                }
-            });
-
-        $(document)
-            .mouseup(function () {
-                isMouseDown = false;
-            });
-    }*/
 });
