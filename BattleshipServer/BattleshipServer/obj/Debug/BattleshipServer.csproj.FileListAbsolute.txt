@@ -4,3 +4,11 @@ C:\Users\Randy\Desktop\Fall17\Comp426\426Final\BattleshipServer\BattleshipServer
 C:\Users\Randy\Desktop\Fall17\Comp426\426Final\BattleshipServer\BattleshipServer\obj\Debug\BattleshipServer.csprojResolveAssemblyReference.cache
 C:\Users\Randy\Desktop\Fall17\Comp426\426Final\BattleshipServer\BattleshipServer\obj\Debug\BattleshipServer.exe
 C:\Users\Randy\Desktop\Fall17\Comp426\426Final\BattleshipServer\BattleshipServer\obj\Debug\BattleshipServer.pdb
+C:\Users\Zelin Tong\Desktop\Fall 2017\Comp426\final\426Final\BattleshipServer\BattleshipServer\bin\Debug\BattleshipServer.exe.config
+C:\Users\Zelin Tong\Desktop\Fall 2017\Comp426\final\426Final\BattleshipServer\BattleshipServer\obj\Debug\BattleshipServer.exe
+C:\Users\Zelin Tong\Desktop\Fall 2017\Comp426\final\426Final\BattleshipServer\BattleshipServer\obj\Debug\BattleshipServer.pdb
+C:\Users\Zelin Tong\Desktop\Fall 2017\Comp426\final\426Final\BattleshipServer\BattleshipServer\bin\Debug\BattleshipServer.exe
+C:\Users\Zelin Tong\Desktop\Fall 2017\Comp426\final\426Final\BattleshipServer\BattleshipServer\bin\Debug\BattleshipServer.pdb
+C:\Users\Zelin Tong\Desktop\Fall 2017\Comp426\final\426Final\BattleshipServer\BattleshipServer\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Zelin Tong\Desktop\Fall 2017\Comp426\final\426Final\BattleshipServer\BattleshipServer\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Zelin Tong\Desktop\Fall 2017\Comp426\final\426Final\BattleshipServer\BattleshipServer\obj\Debug\BattleshipServer.csprojResolveAssemblyReference.cache
