@@ -27,13 +27,12 @@ $(document).ready(function () {
     }
     document.getElementById('build').onclick = function () {
         var num = parseInt(document.getElementById('boardSize').value, 10);
-        tableCreate(num, "topmiddle");
         tableCreate(num, "middle");
         var div = document.getElementById('bCreation');
         div.style.visibility = "hidden";
         div.style.display = "none";
   //      drag()
-        var table = document.getElementById('table-topmiddle');
+        var table = document.getElementById('table-middle');
         var cells = table.getElementsByTagName('td');
         for (var i = 0; i < cells.length; i++) {
             var cell = cells[i];
@@ -43,9 +42,7 @@ $(document).ready(function () {
     };
 
     function selected() {
-        this.className = 'w3-red';
-        var cell = []
-        cell.push(this.id.split(',')[0])
+		this.classList.toggle('w3-red');
         var cell = JSON.stringify(this.id);
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.open("POST", "/json-handler");
@@ -53,4 +50,6 @@ $(document).ready(function () {
         xmlhttp.send(cell);
   //      this.className = '';
     }
+
+    
 });
