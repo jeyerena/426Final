@@ -63,6 +63,13 @@ $(document).ready(function () {
 			}
 		}
 		var sendOff = {theShips,"xSize": tablewidth,"ySize": tableheight};
+		$("#sendoff").remove();
+		var tab = document.getElementById('table-middle');
+		var tiles = tab.getElementsByTagName('td');
+		for (var i = 0; i < tiles.length; i++) {
+            var tile = tiles[i];
+            tile.onclick = "";
+        }
 		console.log(theShips);
 		console.log(sendOff);
 		var txt = JSON.stringify(sendOff);
