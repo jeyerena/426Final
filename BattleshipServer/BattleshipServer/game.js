@@ -1,5 +1,7 @@
 $(document).ready(function () {
 	var num;
+	var playerShip = 'w3-blue';
+	var enemyShip = 'w3-red'; //change only when hit
 
     document.getElementById('build').onclick = function () {
 		num = parseInt(document.getElementById('boardSize').value, 10);
@@ -16,15 +18,16 @@ $(document).ready(function () {
             cell.onclick = shot;
 		}
 		//have it receive the normal player data from the server
-		//or pullit from previous page
+		//or pullit from previous 'page'
 		var tmp = []
 		tmp.push({'x':0, 'y':0, 'length':2, 'isVertical':true})
 		tmp.push({'x':2, 'y':0, 'length':4, 'isVertical':false})			
 		tmp.push({'x':2, 'y':4, 'length':2, 'isVertical':false})	
 		tmp.push({'x':4, 'y':6, 'length':1, 'isVertical':false})	
 		tmp.push({'x':7, 'y':5, 'length':3, 'isVertical':true})	
-		tmp.push({'x':9, 'y':9, 'length':1, 'isVertical':true})			
+		tmp.push({'x':9, 'y':9, 'length':1, 'isVertical':true})	
 		placeShips('bottom', JSON.stringify(tmp));
+		// placeShips('bottom', JSON.stringify({'x':0, 'y':0, 'length':2, 'isVertical':true}));		
 	};
 
 	function tableCreate(num, position) {
@@ -48,17 +51,22 @@ $(document).ready(function () {
 	}
 	
 	function placeShips(position, shipJSON){
-		ships = JSON.parse(shipJSON);
-		//check if it's array
+		var ships = JSON.parse(shipJSON);
+		if (!Array.isArray(ships)){
+			ships = [ships]
+		}
 		for (var i = 0; i < ships.length; i++){
 			var ship = ships[i];
 			if (ship.isVertical){
 				if (ship.x >= 0 && ship.x < num && ship.y >= 0){
 					for (var j = 0; j < ship.length; j++){
 						if (ship.y + j < num){
-							var cellID = position + '-' + (ship.y + j) + ',' + ship.x;									
+							var cellID = position + '-' + (ship.y + j) + ',' + ship.x;
+							var cell = document.getElementById(cellID);									
 							console.log(cellID);
-							document.getElementById(cellID).classList.toggle('w3-blue');
+							if (!cell.classList.contains(playerShip)){
+								cell.classList.toggle(playerShip);								
+							}
 						}
 					}
 				}
@@ -67,10 +75,12 @@ $(document).ready(function () {
 				if (ship.y >= 0 && ship.y < num && ship.x >= 0){
 					for (var j = 0; j < ship.length; j++){
 						if (ship.x + j < num){
-							var cellID = position + '-' + ship.y + ',' + (ship.x + j);	
+							var cellID = position + '-' + ship.y + ',' + (ship.x + j);
+							var cell = document.getElementById(cellID);																
 							console.log(cellID);
-							document.getElementById(cellID).classList.toggle('w3-blue');
-						}
+							if (!cell.classList.contains(playerShip)){
+								cell.classList.toggle(playerShip);								
+							}						}
 					}
 				}
 			}
