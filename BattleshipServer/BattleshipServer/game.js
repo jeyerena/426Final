@@ -19,13 +19,17 @@ $(document).ready(function () {
 		}
 		//have it receive the normal player data from the server
 		//or pullit from previous 'page'
-		var tmp = []
-		tmp.push({'x':0, 'y':0, 'length':2, 'isVertical':true})
-		tmp.push({'x':2, 'y':0, 'length':4, 'isVertical':false})			
-		tmp.push({'x':2, 'y':4, 'length':2, 'isVertical':false})	
-		tmp.push({'x':4, 'y':6, 'length':1, 'isVertical':false})	
-		tmp.push({'x':7, 'y':5, 'length':3, 'isVertical':true})	
-		tmp.push({'x':9, 'y':9, 'length':1, 'isVertical':true})	
+        var tmp = []
+        tmp.push({ 'x': 0, 'y': 0, 'length': 2, 'isVertical': false })
+        tmp.push({ 'x': 3, 'y': 0, 'length': 3, 'isVertical': true })
+        tmp.push({ 'x': 6, 'y': 0, 'length': 4, 'isVertical': false })
+        tmp.push({ 'x': 0, 'y': 2, 'length': 4, 'isVertical': true })
+        tmp.push({ 'x': 5, 'y': 2, 'length': 3, 'isVertical': false })
+        tmp.push({ 'x': 9, 'y': 2, 'length': 2, 'isVertical': true })
+        tmp.push({ 'x': 0, 'y': 7, 'length': 2, 'isVertical': false })
+        tmp.push({ 'x': 5, 'y': 5, 'length': 2, 'isVertical': true })
+        tmp.push({ 'x': 9, 'y': 5, 'length': 3, 'isVertical': true })
+        tmp.push({ 'x': 5, 'y': 9, 'length': 6, 'isVertical': false })
 		placeShips('bottom', JSON.stringify(tmp));
 		// placeShips('bottom', JSON.stringify({'x':0, 'y':0, 'length':2, 'isVertical':true}));		
 	};
