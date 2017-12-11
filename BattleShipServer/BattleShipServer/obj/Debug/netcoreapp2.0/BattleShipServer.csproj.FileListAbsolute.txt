@@ -1,0 +1,11 @@
+C:\Users\Zelin Tong\Desktop\Fall 2017\Comp426\final-test\BattleShipServer\BattleShipServer\bin\Debug\netcoreapp2.0\BattleShipServer.deps.json
+C:\Users\Zelin Tong\Desktop\Fall 2017\Comp426\final-test\BattleShipServer\BattleShipServer\bin\Debug\netcoreapp2.0\BattleShipServer.runtimeconfig.json
+C:\Users\Zelin Tong\Desktop\Fall 2017\Comp426\final-test\BattleShipServer\BattleShipServer\bin\Debug\netcoreapp2.0\BattleShipServer.runtimeconfig.dev.json
+C:\Users\Zelin Tong\Desktop\Fall 2017\Comp426\final-test\BattleShipServer\BattleShipServer\bin\Debug\netcoreapp2.0\BattleShipServer.dll
+C:\Users\Zelin Tong\Desktop\Fall 2017\Comp426\final-test\BattleShipServer\BattleShipServer\bin\Debug\netcoreapp2.0\BattleShipServer.pdb
+C:\Users\Zelin Tong\Desktop\Fall 2017\Comp426\final-test\BattleShipServer\BattleShipServer\obj\Debug\netcoreapp2.0\BattleShipServer.csprojResolveAssemblyReference.cache
+C:\Users\Zelin Tong\Desktop\Fall 2017\Comp426\final-test\BattleShipServer\BattleShipServer\obj\Debug\netcoreapp2.0\BattleShipServer.csproj.CoreCompileInputs.cache
+C:\Users\Zelin Tong\Desktop\Fall 2017\Comp426\final-test\BattleShipServer\BattleShipServer\obj\Debug\netcoreapp2.0\BattleShipServer.AssemblyInfoInputs.cache
+C:\Users\Zelin Tong\Desktop\Fall 2017\Comp426\final-test\BattleShipServer\BattleShipServer\obj\Debug\netcoreapp2.0\BattleShipServer.AssemblyInfo.cs
+C:\Users\Zelin Tong\Desktop\Fall 2017\Comp426\final-test\BattleShipServer\BattleShipServer\obj\Debug\netcoreapp2.0\BattleShipServer.dll
+C:\Users\Zelin Tong\Desktop\Fall 2017\Comp426\final-test\BattleShipServer\BattleShipServer\obj\Debug\netcoreapp2.0\BattleShipServer.pdb
