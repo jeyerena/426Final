@@ -13116,11 +13116,11 @@
       "hideWarningsAndErrors": true
     },
     "restore": {
-      "projectUniqueName": "C:\\Users\\Zelin Tong\\Desktop\\Fall 2017\\Comp426\\final-test\\BattleShipServer\\BattleShipServer\\BattleShipServer.csproj",
+      "projectUniqueName": "C:\\Users\\Zelin Tong\\Desktop\\Fall 2017\\Comp426\\final\\426Final\\426Final\\BattleShipServer\\BattleShipServer.csproj",
       "projectName": "BattleShipServer",
-      "projectPath": "C:\\Users\\Zelin Tong\\Desktop\\Fall 2017\\Comp426\\final-test\\BattleShipServer\\BattleShipServer\\BattleShipServer.csproj",
+      "projectPath": "C:\\Users\\Zelin Tong\\Desktop\\Fall 2017\\Comp426\\final\\426Final\\426Final\\BattleShipServer\\BattleShipServer.csproj",
       "packagesPath": "C:\\Users\\Zelin Tong\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Zelin Tong\\Desktop\\Fall 2017\\Comp426\\final-test\\BattleShipServer\\BattleShipServer\\obj\\",
+      "outputPath": "C:\\Users\\Zelin Tong\\Desktop\\Fall 2017\\Comp426\\final\\426Final\\426Final\\BattleShipServer\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\",

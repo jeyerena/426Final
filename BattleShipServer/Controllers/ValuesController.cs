@@ -13,52 +13,7 @@ namespace BattleShipServer.Controllers
     [Route("Game")]
     public class ValuesController : Controller
     {
-        //services GET requests at url/Game
-        [HttpGet]
-        public ContentResult GetPage() //I'm trying to see if I can get this shitty thing to service the webpages css and js scripts too
-        {
-			//need to implment shit
-			//basically reads GamePage.html from Content folder into a string and send it back
-			//this services the first page get
-			return new ContentResult
-			{
-				ContentType = "text/html",
-				StatusCode = (int)HttpStatusCode.OK,
-				Content = "<html><body>Hello World</body></html>"
-			};
-		}
-
-		//services GET requests at url/Game/Content/GamePage.css
-		[HttpGet]
-		[Route("Content/GamePage.css")]
-		public ContentResult GetCSS()
-		{
-			//need to implment shit
-			//basically reads GamePage.html from Content folder into a string and send it back
-			//this services the first page get
-			return new ContentResult
-			{
-				ContentType = "text/html",
-				StatusCode = (int)HttpStatusCode.OK,
-				Content = "<html><body>Hello World</body></html>"
-			};
-		}
-
-		//services GET requests at url/Game/Content/GamePage.js
-		[HttpGet]
-		[Route("Content/GamePage.js")]
-		public ContentResult GetJS()
-		{
-			//need to implment shit
-			//basically reads GamePage.html from Content folder into a string and send it back
-			//this services the first page get
-			return new ContentResult
-			{
-				ContentType = "text/html",
-				StatusCode = (int)HttpStatusCode.OK,
-				Content = "<html><body>Hello World</body></html>"
-			};
-		}
+		
 
 		// POST Game/Join
 		[HttpPost]
