@@ -10,10 +10,43 @@ using Newtonsoft.Json;
 
 namespace BattleShipServer.Controllers
 {
-    [Route("Game")]
     public class ValuesController : Controller
     {
-		
+		[HttpGet]
+		[Route("game.html")]
+		public ContentResult GetHtml()
+		{
+			return new ContentResult
+			{
+				ContentType = "text/html",
+				StatusCode = (int)HttpStatusCode.OK,
+				Content = System.IO.File.ReadAllText("wwwroot/game.html")
+			};
+		}
+
+		[HttpGet]
+		[Route("game.css")]
+		public ContentResult GetCSS()
+		{
+			return new ContentResult
+			{
+				ContentType = "text/css",
+				StatusCode = (int)HttpStatusCode.OK,
+				Content = System.IO.File.ReadAllText("wwwroot/game.css")
+			};
+		}
+
+		[HttpGet]
+		[Route("game.js")]
+		public ContentResult GetJS()
+		{
+			return new ContentResult
+			{
+				ContentType = "text/javascript",
+				StatusCode = (int)HttpStatusCode.OK,
+				Content = System.IO.File.ReadAllText("wwwroot/game.js")
+			};
+		}
 
 		// POST Game/Join
 		[HttpPost]
