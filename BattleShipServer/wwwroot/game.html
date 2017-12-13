@@ -10,7 +10,14 @@
     <script src="game.js"></script>
 </head>
 <body>
-
+	
+	<div id="woverlay" onclick="off()">
+		<div id="text" class ="centerup" >Victory!</div>
+	</div>
+	<div id="loverlay" onclick="off()">
+		<div id="text" class ="centerup2" >Defeat!</div>
+	</div>
+	
     <div class="w3-container topwrap">
 		<div id="titlestash" class="midd" style="margin-topmiddle: -70px" >
 					<img id="cimage" src="logo.png" alt="Ironclad" height="60">
@@ -20,13 +27,13 @@
             <div id="board" class="w3-display-container w3-display-middle">
 				
 				<div style="width:250px;"id="lCreation" class="w3-display-middle">
-                        <div class = "inl_button"><input type="button" id="build" value="Quickplay"/></div>
-                        <div class = "inl_button"><input type="button" id="unhidem" value="Manual Build"/></div>
+                        <div class = "inl_button "><input type="button" class="bton" id="build" value="Quickplay"/></div>
+                        <div class = "inl_button"><input type="button" class="bton" id="unhidem" value="Manual Build"/></div>
                 </div>
                 
 				<div style="width:250px;"id="bCreation" class="w3-display-middle">
 						Board Size:<input id="boardSize" value="10"/>
-                        <div class = "inl_button"><input type="button" id="manual" value="Submit"/></div>
+                        <div class = "inl_button"><input type="button" class="bton" id="manual" value="Submit"/></div>
 						
                 </div>
                 
