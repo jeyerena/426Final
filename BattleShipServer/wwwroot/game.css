@@ -1,5 +1,12 @@
 
-
+.bton{
+	
+	background-color:#2398CE;
+	border-radius: 8px;
+	color:white;
+	
+}
+.bton:hover {background-color:#197096}
 
 body{
 background-color: #EAEAEA;
@@ -7,6 +14,7 @@ background-color: #EAEAEA;
 }
 .inl_button{
     display:inline-block;
+	
 }
 h1{
 	text-align:center;
@@ -40,4 +48,85 @@ td{
 
 .hasImage{
 	background-image: url("splash.png");
+}
+
+.fifth-text {
+  font-size: 5rem;
+  position: absolute;
+  left: 5%;
+  bottom: 25%;
+  opacity: 0;
+  color: black;
+  animation-name: bottomFadeOut;
+ 
+  animation-duration: 2s;
+}
+
+@keyframes bottomFadeOut {
+  0% {
+    position: absolute;
+    bottom: -5rem;
+    opacity: 0;
+  }
+
+  75% {
+    position: absolute;
+    bottom: 25%;
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+  
+}
+
+
+#woverlay {
+    position: fixed;
+    display: none;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 2;
+    cursor: pointer;
+}
+
+#loverlay {
+    position: fixed;
+    display: none;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 2;
+    cursor: pointer;
+}
+
+.centerup{
+  font-size:200px;
+  font-family:bold;
+  color:white;
+  position: absolute;
+  margin-left:-330px;
+  margin-top:-180px;
+  top: 50%;
+  left: 50%;
+}
+.centerup2{
+  font-size:200px;
+  font-family:bold;
+  color:white;
+  position: absolute;
+  margin-left:-300px;
+  margin-top:-180px;
+  top: 50%;
+  left: 50%;
 }

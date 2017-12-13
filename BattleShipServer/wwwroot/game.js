@@ -77,9 +77,11 @@ $(document).ready(function () {
         }
 		
 		
-		
+		if(position == 'bottom'){
+			 loseon();
+		}
         body.appendChild(tbl);
-		$("#titlestash").prependTo("#board");
+		//$("#titlestash").prependTo("#board");
     }
 
     function placeShips(position, shipJSON) {
@@ -143,23 +145,28 @@ $(document).ready(function () {
                 document.getElementById(cellID).classList.toggle(missedShot);
                 //give waiting message
                 break;
-            case "game-over-win":
+            case "win":
                 //display you-win message
                 break;
-            case "game-over-lose":
+            case "lose":
                 //display you lose message
                 break;
             default:
-                setTimeout(radar(cellID), 1000);
+                ;
         }
-        //display message based on server response
-        // var message = document.createElement('p');
-        // message.innerHTML = 'Hit!';
-        // document.getElementById('events').appendChild(message);
-        //      this.className = '';
+         //display message based on server response
+         var message = document.createElement('p');
+         message.innerHTML = 'Hit!';
+         document.getElementById('events').appendChild(message);
+              this.className = '';
     }
 
     function shot() {
+		var message = document.createElement('p');
+         message.innerHTML = 'Miss!';
+		 message.classList.toggle('fifth-text');
+         document.getElementById('events').appendChild(message);
+              this.className = '';
         if (this.classList.contains(enemyship) || this.classList.contains(missedShot)) {
             return;
         }
@@ -167,6 +174,24 @@ $(document).ready(function () {
         this.classList.toggle(enemyShip);
         radar(this.id);
     }
+	
+	function winon () {
+    document.getElementById("woverlay").style.display = "block";
+	
+	};
+	
+	function loseon () {
+    document.getElementById("loverlay").style.display = "block";
+	
+	};
+
+	document.getElementById('woverlay').onclick = function () {
+    document.getElementById("woverlay").style.display = "none";
+	};
+	
+	document.getElementById('loverlay').onclick = function () {
+    document.getElementById("loverlay").style.display = "none";
+	};
 
     ///BUILD FUNCTIONS///
 
@@ -195,7 +220,7 @@ $(document).ready(function () {
             }
         }
         body.appendChild(tbl);
-		$("#titlestash").prependTo("#board");
+		//$("#titlestash").prependTo("#board");
 
     }
 
@@ -211,6 +236,7 @@ $(document).ready(function () {
         var div = document.getElementById('bCreation');
         div.style.visibility = "hidden";
         div.style.display = "none";
+		$('#sendoff').toggleClass('bton');
         var table = document.getElementById('table-middle');
         var cells = table.getElementsByTagName('td');
         for (var i = 0; i < cells.length; i++) {
