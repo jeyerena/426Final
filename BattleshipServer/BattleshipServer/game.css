@@ -1,3 +1,43 @@
+
+
+
+body{
+background-color: #EAEAEA;
+
+}
 .inl_button{
     display:inline-block;
+}
+h1{
+	text-align:center;
+	margin-left:auto;
+	margin-right:auto;
+}
+.topwrap{
+ 
+ white-space: nowrap;
+ overflow: hidden;
+	
+}
+td{
+	
+	min-width:25px;
+	min-height:50px;
+}
+
+.valid img{
+	 display:block; width:100%; height:auto;
+}
+#cimage{
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.w3-red{
+	opacity:100%;
+}
+
+.hasImage{
+	background-image: url("splash.png");
 }
