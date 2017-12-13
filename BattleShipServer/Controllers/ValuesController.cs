@@ -51,9 +51,17 @@ namespace BattleShipServer.Controllers
 
 		[HttpGet]
 		[Route("logo.png")]
-		public FileResult GetPNG()
+		public FileResult GetLogo()
 		{
 			var imageFileStream = System.IO.File.OpenRead("wwwroot/logo.png");
+			return File(imageFileStream, "image/png");
+		}
+
+		[HttpGet]
+		[Route("splash.png")]
+		public FileResult GetSplash()
+		{
+			var imageFileStream = System.IO.File.OpenRead("wwwroot/splash.png");
 			return File(imageFileStream, "image/png");
 		}
 
