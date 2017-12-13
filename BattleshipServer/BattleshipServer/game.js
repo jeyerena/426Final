@@ -16,7 +16,7 @@ $(document).ready(function () {
     confbutton.style.visibility = "hidden";
     confbutton.style.display = "none";
 
-
+	
 
     document.getElementById('unhidem').onclick = function () {
         var div = document.getElementById('lCreation');
@@ -67,14 +67,19 @@ $(document).ready(function () {
             var tr = tbl.insertRow();
             for (var j = 0; j < num; j++) {
                 var td = tr.insertCell();
-                td.style.width = (150 / num + num - 1) + 'px';
-                td.style.height = (150 / num + num - 1) + 'px';
+                td.style.width = (180 / num + num - 1) + 'px';
+                td.style.height = (180 / num + num - 1) + 'px';
                 td.id = position + '-' + i + ',' + j;
+				td.className = 'hasImage';
                 // td.innerHTML = i + ',' + j;
                 td.style.border = '1px solid black';
             }
         }
+		
+		
+		
         body.appendChild(tbl);
+		$("#titlestash").prependTo("#board");
     }
 
     function placeShips(position, shipJSON) {
@@ -92,6 +97,7 @@ $(document).ready(function () {
                             var cell = document.getElementById(cellID);
                             console.log(cellID);
                             if (!cell.classList.contains(playerShip)) {
+								cell.classList.toggle('hasImage');
                                 cell.classList.toggle(playerShip);
                             }
                         }
@@ -106,6 +112,7 @@ $(document).ready(function () {
                             var cell = document.getElementById(cellID);
                             console.log(cellID);
                             if (!cell.classList.contains(playerShip)) {
+								cell.classList.toggle('hasImage');
                                 cell.classList.toggle(playerShip);
                             }
                         }
@@ -179,15 +186,17 @@ $(document).ready(function () {
             var tr = tbl.insertRow();
             for (var j = 0; j < num; j++) {
                 var td = tr.insertCell();
-                td.style.width = (150 / num + num - 1) + 'px';
-                td.style.height = (150 / num + num - 1) + 'px';
-                td.className = 'valid';
+                td.style.width = (300 / num + num - 1) + 'px';
+                td.style.height = (300 / num + num - 1) + 'px';
+                td.className = 'valid hasImage';
                 td.id = i + ',' + j;
                 // td.innerHTML = i + ',' + j;
                 td.style.border = '1px solid black';
             }
         }
         body.appendChild(tbl);
+		$("#titlestash").prependTo("#board");
+
     }
 
     document.getElementById('manual').onclick = function () {
@@ -249,6 +258,7 @@ $(document).ready(function () {
     };
 
     function selected() {
+		
         var coords = this.id.split(",");
         var intcoords = [parseInt(coords[0]), parseInt(coords[1])];
         if (this.classList.contains('valid') && this.classList.contains('w3-red')) {
@@ -266,6 +276,7 @@ $(document).ready(function () {
             var dlintcoords = [parseInt(dlcoords[0]), parseInt(dlcoords[1])];
 
             this.classList.toggle('w3-red');
+			this.classList.toggle('hasImage');
             if (($(document.getElementById(ur)).data("weight")) == 1) {
                 document.getElementById(ur).classList.toggle('w3-grey');
                 document.getElementById(ur).classList.toggle('valid');
@@ -306,6 +317,7 @@ $(document).ready(function () {
         else if (this.classList.contains('valid') && !this.classList.contains('w3-red')) {
 
             this.classList.toggle('w3-red');
+			this.classList.toggle('hasImage');
             var ur = (intcoords[0] - 1) + "," + (intcoords[1] + 1);
             var ul = (intcoords[0] - 1) + "," + (intcoords[1] - 1);
             var dr = (intcoords[0] + 1) + "," + (intcoords[1] + 1);
