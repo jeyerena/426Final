@@ -10,10 +10,15 @@
     <script src="game.js"></script>
 </head>
 <body>
-    <div class="w3-container">
-            <h1>Ironclad</h1>
+
+    <div class="w3-container topwrap">
+		<div id="titlestash" class="midd" style="margin-topmiddle: -70px" >
+					<img id="cimage" src="logo.png" alt="Ironclad" height="60">
+				</div>	
+            
 			
             <div id="board" class="w3-display-container w3-display-middle">
+				
 				<div style="width:250px;"id="lCreation" class="w3-display-middle">
                         <div class = "inl_button"><input type="button" id="build" value="Quickplay"/></div>
                         <div class = "inl_button"><input type="button" id="unhidem" value="Manual Build"/></div>
@@ -22,13 +27,17 @@
 				<div style="width:250px;"id="bCreation" class="w3-display-middle">
 						Board Size:<input id="boardSize" value="10"/>
                         <div class = "inl_button"><input type="button" id="manual" value="Submit"/></div>
+						
                 </div>
                 
                 <div id="events" class="w3-display-right" style="margin:-50px">
                 </div>
+				<div id="buttonstash" class="w3-display-bottommiddle" style="margin-bottom: -30px">
+				<input type="button" id="sendoff" value="Confirm Table" />
+                </div>
 				
             </div>
-			<input type="button" id="sendoff" value="Confirm Table" />
+			
     </div>
 </body>
 </html>
