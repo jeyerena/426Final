@@ -7,13 +7,14 @@ using BattleShipServer.Models;
 using System.Net;
 using System.IO;
 using Newtonsoft.Json;
+using System.Data.SqlClient;
 
 namespace BattleShipServer.Controllers
 {
     public class ValuesController : Controller
     {
 		[HttpGet]
-		[Route("game.html")]
+		[Route("/")]
 		public ContentResult GetHtml()
 		{
 			return new ContentResult
@@ -57,9 +58,15 @@ namespace BattleShipServer.Controllers
 			int id = 1; //gets this from database
 			GameBoard.ConstructBoard(config, out GameBoard board); //constructs board from config object
 			string jsonout = JsonConvert.SerializeObject(board); //serializes gameboard object to json and writes it to id.txt file
-			TextWriter writer = new StreamWriter($"Content/{id}.txt");
-			writer.WriteLine(jsonout);
-			writer.Close();
+			SqlConnection con = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;Database=matchdb;Integrated Security=True;Connect Timeout=30");
+			con.Open();
+			SqlCommand com = new SqlCommand("Select * from dbo.Matches", con);
+			SqlDataReader reader = com.ExecuteReader();
+			while (reader.Read())
+			{
+				var obj1 = reader[0];
+			}
+			con.Close();
 			//no way to delete created files currently
 			return new ObjectResult(board); //stub, currently just returns board object as json, board obj
         }

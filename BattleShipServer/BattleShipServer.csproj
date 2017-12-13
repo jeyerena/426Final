@@ -5,7 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Persistant_Data\" />
+    <Compile Remove="Persistant_Data\**" />
+    <Content Remove="Persistant_Data\**" />
+    <EmbeddedResource Remove="Persistant_Data\**" />
+    <None Remove="Persistant_Data\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
