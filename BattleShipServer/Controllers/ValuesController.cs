@@ -8,6 +8,7 @@ using System.Net;
 using System.IO;
 using Newtonsoft.Json;
 using MySql.Data.MySqlClient;
+using System.Data;
 
 namespace BattleShipServer.Controllers
 {
@@ -65,29 +66,26 @@ namespace BattleShipServer.Controllers
 			return File(imageFileStream, "image/png");
 		}
 
-		// POST Game/Join
+		// POST /Join
 		[HttpPost]
 		[Route("Join")]
         public IActionResult JoinPost([FromBody]GameConfig config)
         {
-			//needs to handle matchmaking
-			int id = 1; //gets this from database
 			GameBoard.ConstructBoard(config, out GameBoard board); //constructs board from config object
-			string jsonout = JsonConvert.SerializeObject(board); //serializes gameboard object to json and writes it to id.txt file
-			MySqlConnection conn = new MySqlConnection("Server=localhost;database=ztongdb;user=ztong;password=admin");
-			conn.Open();
-			MySqlCommand cmd = new MySqlCommand("SELECT shipconfig FROM Matches", conn);
-			MySqlDataReader reader = cmd.ExecuteReader();
-			while (reader.Read())
+			MatchDBContext context = HttpContext.RequestServices.GetService(typeof(MatchDBContext)) as MatchDBContext;
+			List<Match> matches = context.GetAllMatches(); //go to MatchDBContext and code your own getter for some query
+			if (matches.Count == 0)
 			{
-				var shipconfig = reader.ToString();
+				//code your own query for adding a new match
 			}
-			conn.Close();
-			//no way to delete created files currently
+			else
+			{
+				//add player to match
+			}
 			return new ObjectResult(board); //stub, currently just returns board object as json, board obj
         }
 
-		// POST Game/Fire
+		// POST /Fire
 		[HttpPost]
 		[Route("Fire")]
 		public ContentResult FirePost([FromBody]GameConfig config)
