@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,6 +15,14 @@ namespace BattleShipServer.Models
 		private GameBoard(int xSize, int ySize)
 		{
 			board = new int[ySize, xSize];
+		}
+
+		[JsonConstructor]
+		public GameBoard(int[,] board, int numFilled, int totalNum)
+		{
+			this.board = board;
+			this.numFilled = numFilled;
+			this.totalNum = totalNum;
 		}
 
 		public static bool ConstructBoard(GameConfig config, out GameBoard board)

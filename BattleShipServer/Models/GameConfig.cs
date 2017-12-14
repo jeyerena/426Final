@@ -11,6 +11,7 @@ namespace BattleShipServer.Models
 		public readonly int xSize;
 		public readonly int ySize;
 
+		//for json serialization
 		public GameConfig(Ship[] ships, int xSize, int ySize)
 		{
 			this.ships = ships;
@@ -26,6 +27,7 @@ namespace BattleShipServer.Models
 
 		public ShipConfig(GameConfig config)
 		{
+			lengths = new int[config.ships.Length];
 			for (int i = 0; i < config.ships.Length; i++)
 			{
 				lengths[i] = config.ships[i].length;

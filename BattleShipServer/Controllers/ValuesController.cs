@@ -76,11 +76,13 @@ namespace BattleShipServer.Controllers
 			List<Match> matches = context.GetAllMatches(); //go to MatchDBContext and code your own getter for some query
 			if (matches.Count == 0)
 			{
-				//code your own query for adding a new match
+				//need to create new match
+				context.AddNewMatch(Match.MakeNewMatch(board, config));
 			}
 			else
 			{
-				//add player to match
+				matches[0].JoinMatch(board);
+				context.UpdateMatchRecord(matches[0]);
 			}
 			return new ObjectResult(board); //stub, currently just returns board object as json, board obj
         }

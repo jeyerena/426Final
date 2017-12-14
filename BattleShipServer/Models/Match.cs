@@ -46,7 +46,7 @@ namespace BattleShipServer.Models
 		public void JoinMatch(GameBoard player2Board)
 		{
 			gameStateObj.isFull = true;
-			gameStateObj.gameBoards[2] = player2Board;
+			gameStateObj.gameBoards[1] = player2Board;
 			isFull = true;
 			timeStamp = DateTime.Now;
 			gameState = JsonConvert.SerializeObject(gameStateObj);
@@ -62,6 +62,13 @@ namespace BattleShipServer.Models
 		{
 			gameBoards = new GameBoard[2];
 			isFull = false;
+		}
+
+		[JsonConstructor]
+		private GameState(GameBoard[] gameBoards, bool isFull)
+		{
+			this.gameBoards = gameBoards;
+			this.isFull = isFull;
 		}
 
 		public static GameState MakeNewGame(GameBoard player1Board)
