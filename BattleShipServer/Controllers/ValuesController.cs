@@ -71,6 +71,70 @@ namespace BattleShipServer.Controllers
 			return File(imageFileStream, "image/png");
 		}
 
+		[HttpGet]
+		[Route("End.png")]
+		public FileResult GetEnd()
+		{
+			var imageFileStream = System.IO.File.OpenRead("wwwroot/End.png");
+			return File(imageFileStream, "image/png");
+		}
+
+		[HttpGet]
+		[Route("EndB.png")]
+		public FileResult GetEndB()
+		{
+			var imageFileStream = System.IO.File.OpenRead("wwwroot/EndB.png");
+			return File(imageFileStream, "image/png");
+		}
+
+		[HttpGet]
+		[Route("EndL.png")]
+		public FileResult GetEndL()
+		{
+			var imageFileStream = System.IO.File.OpenRead("wwwroot/EndL.png");
+			return File(imageFileStream, "image/png");
+		}
+
+		[HttpGet]
+		[Route("EndR.png")]
+		public FileResult GetEndR()
+		{
+			var imageFileStream = System.IO.File.OpenRead("wwwroot/EndR.png");
+			return File(imageFileStream, "image/png");
+		}
+
+		[HttpGet]
+		[Route("EndT.png")]
+		public FileResult GetEndT()
+		{
+			var imageFileStream = System.IO.File.OpenRead("wwwroot/EndT.png");
+			return File(imageFileStream, "image/png");
+		}
+
+		[HttpGet]
+		[Route("MiddlePiece.png")]
+		public FileResult GetMiddlePiece()
+		{
+			var imageFileStream = System.IO.File.OpenRead("wwwroot/MiddlePiece.png");
+			return File(imageFileStream, "image/png");
+		}
+
+		[HttpGet]
+		[Route("MiddlePiece2.png")]
+		public FileResult GetMiddlePiece2()
+		{
+			var imageFileStream = System.IO.File.OpenRead("wwwroot/MiddlePiece2.png");
+			return File(imageFileStream, "image/png");
+		}
+
+		[HttpGet]
+		[Route("Single.png")]
+		public FileResult GetSingle()
+		{
+			var imageFileStream = System.IO.File.OpenRead("wwwroot/Single.png");
+			return File(imageFileStream, "image/png");
+		}
+
 		// POST /Join
 		[HttpPost]
 		[Route("Join")]
@@ -154,7 +218,7 @@ namespace BattleShipServer.Controllers
 			bool isPlayer1 = Convert.ToBoolean(cookieUser);
 
 			MatchDBContext context = HttpContext.RequestServices.GetService(typeof(MatchDBContext)) as MatchDBContext;
-			BoardChangeHistory history = new BoardChangeHistory();
+			ChangeHistory history = new ChangeHistory();
 			await mutex.WaitAsync();
 			List<Match> matches = await context.GetMatch(matchId);
 			if (matches.Count != 0)

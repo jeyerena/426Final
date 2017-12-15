@@ -20,8 +20,8 @@ namespace BattleShipServer.Models
 		public string player2Changes { get; set; }
 
 		private GameState gameStateObj;
-		private BoardChangeHistory changes1Obj;
-		private BoardChangeHistory changes2Obj;
+		private ChangeHistory changes1Obj;
+		private ChangeHistory changes2Obj;
 
 		public static Match MakeNewMatch(GameBoard player1Board, GameConfig config)
 		{
@@ -36,8 +36,8 @@ namespace BattleShipServer.Models
 				timeStamp = DateTime.Now,
 				shipConfig = JsonConvert.SerializeObject(new ShipConfig(config)),
 				gameState = JsonConvert.SerializeObject(game),
-				player1Changes = JsonConvert.SerializeObject(new BoardChangeHistory()),
-				player2Changes = JsonConvert.SerializeObject(new BoardChangeHistory()),
+				player1Changes = JsonConvert.SerializeObject(new ChangeHistory(), Formatting.Indented),
+				player2Changes = JsonConvert.SerializeObject(new ChangeHistory(), Formatting.Indented),
 				gameStateObj = game
 			};
 			return m;
@@ -46,8 +46,8 @@ namespace BattleShipServer.Models
 		public void ReConstructState()
 		{
 			gameStateObj = JsonConvert.DeserializeObject<GameState>(gameState);
-			changes1Obj = JsonConvert.DeserializeObject<BoardChangeHistory>(player1Changes);
-			changes2Obj = JsonConvert.DeserializeObject<BoardChangeHistory>(player2Changes);
+			changes1Obj = JsonConvert.DeserializeObject<ChangeHistory>(player1Changes);
+			changes2Obj = JsonConvert.DeserializeObject<ChangeHistory>(player2Changes);
 		}
 
 		public void JoinMatch(GameBoard player2Board)
@@ -69,29 +69,29 @@ namespace BattleShipServer.Models
 			result = new HitResult(hasHit, goAgain, hasWon(isUser1));
 			if (isUser1)
 			{
-				changes2Obj.history.Add(new Change(result, p));
+				changes2Obj.changes.Add(new Change(result, p));
 				player2Changes = JsonConvert.SerializeObject(changes2Obj);
 			}
 			else
 			{
-				changes1Obj.history.Add(new Change(result, p));
+				changes1Obj.changes.Add(new Change(result, p));
 				player1Changes = JsonConvert.SerializeObject(changes1Obj);
 			}
 		}
 
-		public BoardChangeHistory getHistory(bool isUser1)
+		public ChangeHistory getHistory(bool isUser1)
 		{
-			BoardChangeHistory returnObj;
+			ChangeHistory returnObj;
 			if (isUser1)
 			{
 				returnObj = changes2Obj;
-				changes2Obj.history.Clear();
+				changes2Obj.changes.Clear();
 				player2Changes = JsonConvert.SerializeObject(changes2Obj);
 			}
 			else
 			{
 				returnObj = changes1Obj;
-				changes1Obj.history.Clear();
+				changes1Obj.changes.Clear();
 				player1Changes = JsonConvert.SerializeObject(changes1Obj);
 			}
 			return returnObj;
