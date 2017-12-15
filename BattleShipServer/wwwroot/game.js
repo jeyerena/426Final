@@ -73,7 +73,7 @@ $(document).ready(function () {
         ships.push({ 'x': 0, 'y': 7, 'length': 2, 'isVertical': false });
         ships.push({ 'x': 5, 'y': 5, 'length': 2, 'isVertical': true });
         ships.push({ 'x': 9, 'y': 5, 'length': 3, 'isVertical': true });
-        ships.push({ 'x': 5, 'y': 9, 'length': 6, 'isVertical': false });
+        ships.push({ 'x': 5, 'y': 9, 'length': 2, 'isVertical': false });
         
         placeShips('bottom', JSON.stringify(ships));
         
@@ -180,16 +180,16 @@ $(document).ready(function () {
                 }
             }
         }
-        var cookie = Document.cookies;
-        cookie = cookie.split(';')[1];
-        cookie = cookie.split('=')[1];
-        if (cookie == 'true'){
-            myTurn = true;
-        }
-        else{
-            myTurn = false;
-            setTimeout(poll(), 1000);            
-        }
+        // var cookie = Document.cookies;
+        // cookie = cookie.split(';')[1];
+        // cookie = cookie.split('=')[1];
+        // if (cookie == 'true'){
+        //     myTurn = true;
+        // }
+        // else{
+        //     myTurn = false;
+        //     setTimeout(poll(), 1000);            
+        // }
     };
 
     function updateBoard(coordList){
