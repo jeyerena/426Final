@@ -16,8 +16,12 @@ namespace BattleShipServer.Models
 		public DateTime timeStamp { get; set; }
 		public string shipConfig { get; set; }
 		public string gameState { get; set; }
+		public string player1Changes { get; set; }
+		public string player2Changes { get; set; }
 
 		private GameState gameStateObj;
+		private BoardChangeHistory changes1Obj;
+		private BoardChangeHistory changes2Obj;
 
 		public static Match MakeNewMatch(GameBoard player1Board, GameConfig config)
 		{
@@ -32,7 +36,8 @@ namespace BattleShipServer.Models
 				timeStamp = DateTime.Now,
 				shipConfig = JsonConvert.SerializeObject(new ShipConfig(config)),
 				gameState = JsonConvert.SerializeObject(game),
-
+				player1Changes = JsonConvert.SerializeObject(new BoardChangeHistory()),
+				player2Changes = JsonConvert.SerializeObject(new BoardChangeHistory()),
 				gameStateObj = game
 			};
 			return m;
@@ -41,6 +46,8 @@ namespace BattleShipServer.Models
 		public void ReConstructState()
 		{
 			gameStateObj = JsonConvert.DeserializeObject<GameState>(gameState);
+			changes1Obj = JsonConvert.DeserializeObject<BoardChangeHistory>(player1Changes);
+			changes2Obj = JsonConvert.DeserializeObject<BoardChangeHistory>(player2Changes);
 		}
 
 		public void JoinMatch(GameBoard player2Board)
@@ -52,17 +59,45 @@ namespace BattleShipServer.Models
 			gameState = JsonConvert.SerializeObject(gameStateObj);
 		}
 
-		public bool hit(bool isUser1, Point p, out bool goAgain)
+		public void hit(bool isUser1, Point p, out HitResult result)
 		{
-			bool hasHit = gameStateObj.hit(isUser1, p, out goAgain);
+			bool hasHit = gameStateObj.hit(isUser1, p, out bool goAgain);
 			if (!goAgain)
 			{
 				isUser1 = !isUser1;
 			}
-			return hasHit;
+			result = new HitResult(hasHit, goAgain, hasWon(isUser1));
+			if (isUser1)
+			{
+				changes2Obj.history.Add(new Change(result, p));
+				player2Changes = JsonConvert.SerializeObject(changes2Obj);
+			}
+			else
+			{
+				changes1Obj.history.Add(new Change(result, p));
+				player1Changes = JsonConvert.SerializeObject(changes1Obj);
+			}
 		}
 
-		public bool hasWon(bool isUser1)
+		public BoardChangeHistory getHistory(bool isUser1)
+		{
+			BoardChangeHistory returnObj;
+			if (isUser1)
+			{
+				returnObj = changes2Obj;
+				changes2Obj.history.Clear();
+				player2Changes = JsonConvert.SerializeObject(changes2Obj);
+			}
+			else
+			{
+				returnObj = changes1Obj;
+				changes1Obj.history.Clear();
+				player1Changes = JsonConvert.SerializeObject(changes1Obj);
+			}
+			return returnObj;
+		}
+
+		private bool hasWon(bool isUser1)
 		{
 			if (isUser1)
 				return gameStateObj.gameBoards[0].numFilled == 0;
