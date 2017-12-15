@@ -37,6 +37,8 @@ td{
 	 display:block; width:100%; height:auto;
 }
 #cimage{
+	margin-top:-380px;
+	position:relative;
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
@@ -48,6 +50,51 @@ td{
 
 .hasImage{
 	background-image: url("splash.png");
+}
+
+.hasShipEndL{
+	background-position: center; 
+	background-size: 98%;
+	background-repeat:no-repeat;
+	background-image: url("EndL.png");
+	
+}
+.hasShipEndR{
+	background-position: center; 
+	background-size: 98%;
+	background-repeat:no-repeat;
+	background-image: url("EndR.png");
+	
+}
+.hasShipEndT{
+	background-position: center; 
+	background-size: 98%;
+	background-repeat:no-repeat;
+	background-image: url("EndT.png");
+	
+}
+.hasShipEndB{
+	background-position: center; 
+	background-size: 98%;
+	background-repeat:no-repeat;
+	background-image: url("EndB.png");
+	
+}
+.hasShipMiddle{
+	background-position: center; 
+	background-size: 98%;
+	background-image: url("middle piece.png");
+}
+.hasShipMiddle2{
+	background-position: center; 
+	background-size: 100%;
+	background-image: url("middle piece2.png");
+}
+
+.hasShipSingle{
+	background-position: center; 
+	background-size: 98%;
+	background-image: url("single.png");
 }
 
 .fifth-text {
@@ -129,4 +176,8 @@ td{
   margin-top:-180px;
   top: 50%;
   left: 50%;
+}
+
+.shipHere{
+	
 }

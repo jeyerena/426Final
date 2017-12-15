@@ -8,6 +8,9 @@ $(document).ready(function () {
     var tablewidth = 0;
     var tableheight = 0;
 
+	
+	//var theSocket = new WebSocket("http://testserver4-ztong.cloudapps.unc.edu/");
+	
     var initdiv = document.getElementById('bCreation');
     initdiv.style.visibility = "hidden";
     initdiv.style.display = "none";
@@ -27,6 +30,7 @@ $(document).ready(function () {
     };
 
     document.getElementById('build').onclick = function () {
+		document.getElementById("cimage").style.marginTop = "-70px";
         num = parseInt(document.getElementById('boardSize').value, 10);
         tableCreate(num, "top");
         tableCreate(num, "bottom");
@@ -77,9 +81,9 @@ $(document).ready(function () {
         }
 		
 		
-		if(position == 'bottom'){
-			 loseon();
-		}
+		//if(position == 'bottom'){
+		//	 loseon();
+		//}
         body.appendChild(tbl);
 		//$("#titlestash").prependTo("#board");
     }
@@ -89,6 +93,7 @@ $(document).ready(function () {
         if (!Array.isArray(ships)) {
             ships = [ships];
         }
+		console.log(ships);
         for (var i = 0; i < ships.length; i++) {
             var ship = ships[i];
             if (ship.isVertical) {
@@ -97,10 +102,20 @@ $(document).ready(function () {
                         if (ship.y + j < num) {
                             var cellID = position + '-' + (ship.y + j) + ',' + ship.x;
                             var cell = document.getElementById(cellID);
-                            console.log(cellID);
+                            cell.classList.toggle('hasShip');
                             if (!cell.classList.contains(playerShip)) {
-								cell.classList.toggle('hasImage');
-                                cell.classList.toggle(playerShip);
+								console.log(ship.length);
+								if(j==0){
+									cell.classList.toggle('hasShipEndT')
+								}
+								else if(j==(ship.length-1)){
+									cell.classList.toggle('hasShipEndB');
+								}
+								else{
+									cell.classList.toggle('hasShipMiddle2')
+								}
+								//cell.classList.toggle('hasShipSingle');
+                                //cell.classList.toggle(playerShip);
                             }
                         }
                     }
@@ -112,10 +127,22 @@ $(document).ready(function () {
                         if (ship.x + j < num) {
                             var cellID = position + '-' + ship.y + ',' + (ship.x + j);
                             var cell = document.getElementById(cellID);
-                            console.log(cellID);
+                            cell.classList.toggle('hasShip');
                             if (!cell.classList.contains(playerShip)) {
-								cell.classList.toggle('hasImage');
-                                cell.classList.toggle(playerShip);
+								if(ship.length==1){
+									cell.classList.toggle('hasShipSingle');
+								}
+								else if(j==0){
+									cell.classList.toggle('hasShipEndL');
+								}
+								else if(j==(ship.length-1)){
+									cell.classList.toggle('hasShipEndR');
+								}
+								else{
+									cell.classList.toggle('hasShipMiddle')
+								}
+								//cell.classList.toggle('hasImage');
+                                //cell.classList.toggle(playerShip);
                             }
                         }
                     }
@@ -123,7 +150,7 @@ $(document).ready(function () {
             }
         }
     }
-
+	
     function radar(cellID) {
         var coordinates = cellID.split('-', 1)[1];
         var cell = {};
@@ -151,14 +178,16 @@ $(document).ready(function () {
             case "lose":
                 //display you lose message
                 break;
+			case "missgoagain":
+				
             default:
                 ;
         }
          //display message based on server response
-         var message = document.createElement('p');
-         message.innerHTML = 'Hit!';
-         document.getElementById('events').appendChild(message);
-              this.className = '';
+         //var message = document.createElement('p');
+         //message.innerHTML = 'Hit!';
+         //document.getElementById('events').appendChild(message);
+         //    this.className = '';
     }
 
     function shot() {
@@ -192,7 +221,9 @@ $(document).ready(function () {
 	document.getElementById('loverlay').onclick = function () {
     document.getElementById("loverlay").style.display = "none";
 	};
-
+	
+	
+	
     ///BUILD FUNCTIONS///
 
     //Included  copy of tableCreate with ids that work with my parsing scheme.
@@ -225,6 +256,7 @@ $(document).ready(function () {
     }
 
     document.getElementById('manual').onclick = function () {
+		document.getElementById("cimage").style.marginTop = "-260px";
         num = parseInt(document.getElementById('boardSize').value, 10);
         if (num < 2) {
             num = 2;
@@ -278,8 +310,15 @@ $(document).ready(function () {
         var div = document.getElementById('table-middle');
         div.style.visibility = "hidden";
         div.style.display = "none";
+		document.getElementById("cimage").style.marginTop = "-70px";
         tableCreate(num, "top");
         tableCreate(num, "bottom");
+		var table = document.getElementById('table-top');
+        var cells = table.getElementsByTagName('td');
+        for (var i = 0; i < cells.length; i++) {
+            var cell = cells[i];
+            cell.onclick = shot;
+        }
         placeShips('bottom', JSON.stringify(theShips));
     };
 
