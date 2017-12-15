@@ -7,6 +7,7 @@ $(document).ready(function () {
     var theShips = [];
     var tablewidth = 0;
     var tableheight = 0;
+    var myTurn = false;
 
     var fire = '/Fire';
     var poll = '/Fire/Poll';
@@ -62,10 +63,16 @@ $(document).ready(function () {
 
         var sendOff = { tmp, "xSize": tablewidth, "ySize": tableheight };
         var xmlhttp = new XMLHttpRequest();
+
+        xmlhttp.onreadystatechange = function(){
+            if (xmlhttp.readyState == XMLHttpRequest.DONE){
+                var res = JSON.parse(xmlhttp.responseText);
+            }
+        }
+
         xmlhttp.open("POST", '/Join');
         xmlhttp.send(txt);
 
-        var response = $.getJSON();
         placeShips('bottom', JSON.stringify(tmp));
     };
 
@@ -97,6 +104,7 @@ $(document).ready(function () {
     }
 
     function placeShips(position, shipJSON) {
+        setTimeout(poll(), 1000);
         var ships = JSON.parse(shipJSON);
         if (!Array.isArray(ships)) {
             ships = [ships];
@@ -157,46 +165,58 @@ $(document).ready(function () {
                 }
             }
         }
-    }
+    };
+
+    function updateBoard(coordList){
+        if (ans.hasOwnProperty('Message')){
+            setTimeout(poll(), 1000);
+            return;
+        }
+
+        for(var i = 0; i < ans.length; i++){
+            var hit = ans[i]['enemyResult'];
+            var pos = ans[i]['hitPos'];
+            var cellID = 'bottom-' + pos['x'] + ',' + pos['y'];
+            var cell = document.getElementById(cellID);
+            if (hit['winCon']){
+                loseon();
+            }
+            if (hit['hasHit'] && hit['goAgain']){
+                if (cell.classList.contains(playerShip)){
+                    cell.classList.toggle('hit')                    
+                }
+            }
+            if (!hit['hasHit'] && !hit['goAgain']){
+                if (!cell.classList.contains(playerShip)){
+                    cell.classList.toggle(missedShot)
+                    myTurn = true;
+                }
+            }
+            if (!hit['hasHit'] && hit['goAgain']){
+                if (!cell.classList.contains(playerShip)){
+                }
+            }
+        }
+    };
 	
     function poll() {
         var turn = '';
         var xmlhttp = new XMLHttpRequest();
+
+        xmlhttp.onreadystatechange = function(){
+            if (xmlhttp.readyState == XMLHttpRequest.DONE){
+                var ans = JSON.parse(xmlhttp.responseText);
+                updateBoard(ans);
+            }
+        }
         xmlhttp.open("POST", poll);
         xmlhttp.setRequestHeader("Content-Type", "application/json");
         xmlhttp.send(turn);
-
-        var response = $.getJSON();
-        var ans = JSON.parse(response);
-
-        switch (ans){
-            case ans.hasOwnProperty('Message'):
-                break;
-            
-            default:
-                setTimeout(poll(), 1000);
-                break;
-        }
-
     }
 
-    function radar(cellID){
-        var coordinates = cellID.split('-', 1)[1];
-        var cell = {};
-        cell['x'] = coordinates[0];
-        cell['y'] = coordinates[1];
-        cell = JSON.stringify(cell);
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.open("POST", fire);
-        xmlhttp.setRequestHeader("Content-Type", "application/json");
-        xmlhttp.send(cell);
-
-        var response = $.getJSON();
-        var hit = JSON.parse(response);
-
+    function radar(hit){
         if (hit.hasOwnProperty('Message')){
             return;
-            //radar(cellID);
         }
 
         if (hit['winCon']){
@@ -204,29 +224,57 @@ $(document).ready(function () {
         }
         if (hit['hasHit'] && hit['goAgain']){
             document.getElementById(cellID).classList.toggle(enemyship);            
+            var message = document.createElement('p');
+            message.innerHTML = 'Hit!';
+            message.classList.toggle('fifth-text');
+            document.getElementById('events').appendChild(message);
         }
         if (!hit['hasHit'] && !hit['goAgain']){
-            document.getElementById(cellID).classList.toggle(missedShot);    
+            document.getElementById(cellID).classList.toggle(missedShot);
+            var message = document.createElement('p');
+            message.innerHTML = 'Miss!';
+            message.classList.toggle('fifth-text');
+            document.getElementById('events').appendChild(message);    
             poll();        
         }
         if (!hit['hasHit'] && hit['goAgain']){
             document.getElementById(cellID).onclick = '';
         }
-    }
+    };
 
     function shot() {
+        if (!myTurn){
+            return;
+        }
 		var message = document.createElement('p');
-         message.innerHTML = 'Miss!';
+         message.innerHTML = 'Test!';
 		 message.classList.toggle('fifth-text');
          document.getElementById('events').appendChild(message);
-              this.className = '';
+            //   this.className = '';
         if (this.classList.contains(enemyship) || this.classList.contains(missedShot)) {
             return;
         }
         //remove me
         this.classList.toggle(enemyShip);
         radar(this.id)
-    }
+
+        var coordinates = cellID.split('-', 1)[1];
+        var cell = {};
+        cell['x'] = coordinates.split(',')[0];
+        cell['y'] = coordinates.split(',')[1];
+        cell = JSON.stringify(cell);
+        var xmlhttp = new XMLHttpRequest();
+
+        xmlhttp.onreadystatechange = function(){
+            if (xmlhttp.readyState == XMLHttpRequest.DONE){
+                var hit = JSON.parse(xmlhttp.responseText);
+                radar(hit);
+            }
+        }
+        xmlhttp.open("POST", fire);
+        xmlhttp.setRequestHeader("Content-Type", "application/json");
+        xmlhttp.send(cell);
+    };
 	
 	function winon () {
     document.getElementById("woverlay").style.display = "block";
@@ -277,7 +325,7 @@ $(document).ready(function () {
         body.appendChild(tbl);
 		//$("#titlestash").prependTo("#board");
 
-    }
+    };
 
     document.getElementById('manual').onclick = function () {
 		document.getElementById("cimage").style.marginTop = "-260px";
@@ -327,10 +375,15 @@ $(document).ready(function () {
         var txt = JSON.stringify(sendOff);
         console.log(txt);
         var xmlhttp = new XMLHttpRequest();
+
+        xmlhttp.onreadystatechange = function(){
+            if (xmlhttp.readyState == XMLHttpRequest.DONE){
+                var res = JSON.parse(xmlhttp.responseText);
+            }
+        }
+
         xmlhttp.open("POST", '/Join');
         xmlhttp.send(txt);
-
-        var response = $.getJSON();
 
         //Temporary preview
         var div = document.getElementById('table-middle');
