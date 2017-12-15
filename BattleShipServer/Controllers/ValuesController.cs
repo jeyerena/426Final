@@ -9,11 +9,16 @@ using System.IO;
 using Newtonsoft.Json;
 using MySql.Data.MySqlClient;
 using System.Data;
+using System.Net.WebSockets;
+using Microsoft.AspNetCore.Http;
+using System.Threading;
 
 namespace BattleShipServer.Controllers
 {
     public class ValuesController : Controller
     {
+		private SemaphoreSlim mutex = new SemaphoreSlim(1);
+
 		[HttpGet]
 		[Route("/")]
 		public ContentResult GetHtml()
@@ -22,7 +27,7 @@ namespace BattleShipServer.Controllers
 			{
 				ContentType = "text/html",
 				StatusCode = (int)HttpStatusCode.OK,
-				Content = System.IO.File.ReadAllText("wwwroot/game.html")
+				Content = System.IO.File.ReadAllText("wwwroot/index.html")
 			};
 		}
 
@@ -69,39 +74,24 @@ namespace BattleShipServer.Controllers
 		// POST /Join
 		[HttpPost]
 		[Route("Join")]
-        public IActionResult JoinPost([FromBody]GameConfig config)
+        public async Task<IActionResult> JoinPost([FromBody]GameConfig config)
         {
-			GameBoard.ConstructBoard(config, out GameBoard board); //constructs board from config object
+			if (!GameBoard.ConstructBoard(config, out GameBoard board)) return new ObjectResult(new InvalidInputObject("you done fukd up son"));
 			MatchDBContext context = HttpContext.RequestServices.GetService(typeof(MatchDBContext)) as MatchDBContext;
-			List<Match> matches = context.GetAllMatches(); //go to MatchDBContext and code your own getter for some query
+			await mutex.WaitAsync();
+			List<Match> matches = await context.FindBestAvailMatch(config); //go to MatchDBContext and code your own getter for some query
 			if (matches.Count == 0)
 			{
 				//need to create new match
-				context.AddNewMatch(Match.MakeNewMatch(board, config));
+				await context.AddNewMatch(Match.MakeNewMatch(board, config));
 			}
 			else
 			{
 				matches[0].JoinMatch(board);
-				context.UpdateMatchRecord(matches[0]);
+				await context.UpdateMatchRecord(matches[0]);
 			}
+			mutex.Release();
 			return new ObjectResult(board); //stub, currently just returns board object as json, board obj
         }
-
-		// POST /Fire
-		[HttpPost]
-		[Route("Fire")]
-		public ContentResult FirePost([FromBody]GameConfig config)
-		{
-			//reads from 1.txt and returns its content as html
-			//can easily modify it to output some object that contains desired result as json
-			StreamReader sr = new StreamReader("Content/1.txt");
-			string line = sr.ReadToEnd();
-			return new ContentResult
-			{
-				ContentType = "text/html",
-				StatusCode = (int)HttpStatusCode.OK,
-				Content = "<html><body>"+ line +"</body></html>"
-			};
-		}
     }
 }

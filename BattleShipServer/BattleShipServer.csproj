@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="WebSocketManager\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
