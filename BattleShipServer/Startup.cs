@@ -11,7 +11,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using WebSocketManager;
 
 namespace BattleShipServer
 {
@@ -30,7 +29,6 @@ namespace BattleShipServer
 			MatchDBContext dbContext = new MatchDBContext(Configuration.GetConnectionString("DefaultConnection"));
 			services.AddMvc();
 			services.AddSingleton<MatchDBContext>(dbContext);
-			services.AddSingleton<WebSocketHandler>(new WebSocketHandler(new WebSocketConnectionManager(dbContext)));
 		}
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,8 +40,6 @@ namespace BattleShipServer
             }
 
             app.UseMvc();
-			app.UseWebSockets();
-			app.Map("/Fire", _app => _app.UseMiddleware<WebSocketManagerMiddleware>(serviceProvider.GetService<WebSocketHandler>()));
         }
     }
 }

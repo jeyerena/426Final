@@ -17,7 +17,7 @@ namespace BattleShipServer.Controllers
 {
     public class ValuesController : Controller
     {
-		private SemaphoreSlim mutex = new SemaphoreSlim(1);
+		private static SemaphoreSlim mutex = new SemaphoreSlim(1, 1);
 
 		[HttpGet]
 		[Route("/")]
@@ -27,7 +27,7 @@ namespace BattleShipServer.Controllers
 			{
 				ContentType = "text/html",
 				StatusCode = (int)HttpStatusCode.OK,
-				Content = System.IO.File.ReadAllText("wwwroot/index.html")
+				Content = System.IO.File.ReadAllText("wwwroot/game.html")
 			};
 		}
 
@@ -76,22 +76,79 @@ namespace BattleShipServer.Controllers
 		[Route("Join")]
         public async Task<IActionResult> JoinPost([FromBody]GameConfig config)
         {
-			if (!GameBoard.ConstructBoard(config, out GameBoard board)) return new ObjectResult(new InvalidInputObject("you done fukd up son"));
+			if (!GameBoard.ConstructBoard(config, out GameBoard board)) return new ObjectResult(new ResponseMessageObj("you done fukd up son"));
 			MatchDBContext context = HttpContext.RequestServices.GetService(typeof(MatchDBContext)) as MatchDBContext;
+			string cookieId;
+			string cookieUser;
 			await mutex.WaitAsync();
 			List<Match> matches = await context.FindBestAvailMatch(config); //go to MatchDBContext and code your own getter for some query
 			if (matches.Count == 0)
 			{
 				//need to create new match
-				await context.AddNewMatch(Match.MakeNewMatch(board, config));
+				Match newMatch = Match.MakeNewMatch(board, config);
+				await context.AddNewMatch(newMatch);
+				cookieId = newMatch.matchId.ToString();
+				cookieUser = newMatch.isUser1.ToString();
 			}
 			else
 			{
 				matches[0].JoinMatch(board);
 				await context.UpdateMatchRecord(matches[0]);
+				cookieId = matches[0].matchId.ToString();
+				cookieUser = matches[0].isUser1.ToString();
 			}
 			mutex.Release();
+			CookieOptions option = new CookieOptions();
+			option.Expires = DateTime.Now.AddMinutes(2);
+			option.Path = "/Fire";
+			Response.Cookies.Delete("matchId");
+			Response.Cookies.Delete("isUser1");
+			Response.Cookies.Append("matchId", cookieId, option);
+			Response.Cookies.Append("isUser1", cookieUser, option);
 			return new ObjectResult(board); //stub, currently just returns board object as json, board obj
         }
+
+		[HttpPost]
+		[Route("Fire")]
+		public async Task<IActionResult> FirePost([FromBody]Point p)
+		{
+			if (!HttpContext.Request.Cookies.ContainsKey("matchId") || !HttpContext.Request.Cookies.ContainsKey("isUser1"))
+				return new ObjectResult(new ResponseMessageObj("Oops, lost your cookie"));
+			string cookieId = HttpContext.Request.Cookies["matchId"];
+			string cookieUser = HttpContext.Request.Cookies["isUser1"];
+			int matchId = Convert.ToInt32(cookieId);
+			bool isUser1 = Convert.ToBoolean(cookieUser);
+
+			MatchDBContext context = HttpContext.RequestServices.GetService(typeof(MatchDBContext)) as MatchDBContext;
+
+			await mutex.WaitAsync();
+			List<Match> matches = await context.GetMatch(matchId, isUser1);
+			bool goAgain = false;
+			bool hit = false;
+			bool winCon = false;
+			if (matches.Count != 0)
+			{
+				hit = matches[0].hit(isUser1, p, out goAgain);
+				await context.UpdateMatchRecord(matches[0]);
+				winCon = matches[0].hasWon(isUser1);
+			}
+			mutex.Release();
+
+			CookieOptions option = new CookieOptions();
+			option.Expires = DateTime.Now.AddMinutes(2);
+			option.Path = "/Fire";
+			Response.Cookies.Delete("matchId");
+			Response.Cookies.Delete("isUser1");
+			Response.Cookies.Append("matchId", cookieId, option);
+			Response.Cookies.Append("isUser1", cookieUser, option);
+			return new ObjectResult(new HitResult(hit, goAgain, winCon));
+		}
+
+		//[HttpPost]
+		//[Route("Fire/Poll")]
+		//public async Task<IActionResult> PollPost()
+		//{
+		//
+		//}
     }
 }
