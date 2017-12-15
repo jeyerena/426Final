@@ -83,18 +83,18 @@ td{
 .hasShipMiddle{
 	background-position: center; 
 	background-size: 98%;
-	background-image: url("middle piece.png");
+	background-image: url("MiddlePiece.png");
 }
 .hasShipMiddle2{
 	background-position: center; 
 	background-size: 100%;
-	background-image: url("middle piece2.png");
+	background-image: url("MiddlePiece2.png");
 }
 
 .hasShipSingle{
 	background-position: center; 
 	background-size: 98%;
-	background-image: url("single.png");
+	background-image: url("Single.png");
 }
 
 .fifth-text {

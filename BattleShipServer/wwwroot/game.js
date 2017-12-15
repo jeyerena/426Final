@@ -260,10 +260,13 @@ $(document).ready(function () {
         // if (!myTurn){
         //     return;
         // // }
-		// var message = document.createElement('p');
-        //  message.innerHTML = 'Test!';
-		//  message.classList.toggle('fifth-text');
-        //  document.getElementById('events').appendChild(message);
+        if (this.id == 'top-0,0'){
+            winon();
+        }
+		var message = document.createElement('p');
+        message.innerHTML = 'Miss!';
+        message.classList.toggle('fifth-text');
+        document.getElementById('events').appendChild(message);
             //   this.className = '';
         if (this.classList.contains(enemyship) || this.classList.contains(missedShot)) {
             return;
