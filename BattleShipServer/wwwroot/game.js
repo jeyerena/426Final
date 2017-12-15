@@ -8,6 +8,8 @@ $(document).ready(function () {
     var tablewidth = 0;
     var tableheight = 0;
 
+    var fire = '/Fire';
+    var poll = '/Fire/Poll';
 	
 	//var theSocket = new WebSocket("http://testserver4-ztong.cloudapps.unc.edu/");
 	
@@ -57,8 +59,14 @@ $(document).ready(function () {
         tmp.push({ 'x': 5, 'y': 5, 'length': 2, 'isVertical': true });
         tmp.push({ 'x': 9, 'y': 5, 'length': 3, 'isVertical': true });
         tmp.push({ 'x': 5, 'y': 9, 'length': 6, 'isVertical': false });
+
+        var sendOff = { tmp, "xSize": tablewidth, "ySize": tableheight };
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("POST", '/Join');
+        xmlhttp.send(txt);
+
+        var response = $.getJSON();
         placeShips('bottom', JSON.stringify(tmp));
-        // placeShips('bottom', JSON.stringify({'x':0, 'y':0, 'length':2, 'isVertical':true}));		
     };
 
     function tableCreate(num, position) {
@@ -151,6 +159,60 @@ $(document).ready(function () {
         }
     }
 	
+    function poll() {
+        var turn = '';
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("POST", poll);
+        xmlhttp.setRequestHeader("Content-Type", "application/json");
+        xmlhttp.send(turn);
+
+        var response = $.getJSON();
+        var ans = JSON.parse(response);
+
+        switch (ans){
+            case ans.hasOwnProperty('Message'):
+                break;
+            
+            default:
+                setTimeout(poll(), 1000);
+                break;
+        }
+
+    }
+
+    function radar(cellID){
+        var coordinates = cellID.split('-', 1)[1];
+        var cell = {};
+        cell['x'] = coordinates[0];
+        cell['y'] = coordinates[1];
+        cell = JSON.stringify(cell);
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("POST", fire);
+        xmlhttp.setRequestHeader("Content-Type", "application/json");
+        xmlhttp.send(cell);
+
+        var response = $.getJSON();
+        var hit = JSON.parse(response);
+
+        if (hit.hasOwnProperty('Message')){
+            return;
+            //radar(cellID);
+        }
+
+        if (hit['winCon']){
+            winon()
+        }
+        if (hit['hasHit'] && hit['goAgain']){
+            document.getElementById(cellID).classList.toggle(enemyship);            
+        }
+        if (!hit['hasHit'] && !hit['goAgain']){
+            document.getElementById(cellID).classList.toggle(missedShot);    
+            poll();        
+        }
+        if (!hit['hasHit'] && hit['goAgain']){
+            document.getElementById(cellID).onclick = '';
+        }
+    }
 
     function shot() {
 		var message = document.createElement('p');
@@ -163,37 +225,7 @@ $(document).ready(function () {
         }
         //remove me
         this.classList.toggle(enemyShip);
-
-        var coordinates = this.id.split('-', 1)[1];
-        var cell = {};
-        cell['x'] = coordinates.split(',')[0];
-        cell['y'] = coordinates.split(',')[1];
-        var cell = JSON.stringify(cell);
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.open("POST", "/json-handler");
-        xmlhttp.setRequestHeader("Content-Type", "application/json");
-        xmlhttp.send(cell);
-
-        var response = $.getJSON();
-        response = JSON.stringify(response);
-        switch (response) {
-            case "hit":
-                document.getElementById(cellID).classList.toggle(enemyship);
-                break;
-            case "miss":
-                document.getElementById(cellID).classList.toggle(missedShot);
-                //give waiting message
-                break;
-            case "win":
-                //display you-win message
-                break;
-            case "lose":
-                //display you lose message
-                break;
-			case "missgoagain":
-				
-            default:
-                ;
+        radar(this.id)
     }
 	
 	function winon () {
@@ -295,8 +327,10 @@ $(document).ready(function () {
         var txt = JSON.stringify(sendOff);
         console.log(txt);
         var xmlhttp = new XMLHttpRequest();
-        xmlhttp.open("POST", "/json-handler");
+        xmlhttp.open("POST", '/Join');
         xmlhttp.send(txt);
+
+        var response = $.getJSON();
 
         //Temporary preview
         var div = document.getElementById('table-middle');
@@ -430,7 +464,7 @@ $(document).ready(function () {
         }
 
 
-    }
+    };
 
     function shipScan(xval, yval) {
         var shipLen = 0;
