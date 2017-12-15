@@ -144,32 +144,32 @@ namespace BattleShipServer.Models
 			if (isUser1)
 			{
 				gameBoard = gameBoards[1];
-				val = gameBoard.board[p.x, p.y];
+				val = gameBoard.board[p.y, p.x];
 			}
 			else
 			{
 				gameBoard = gameBoards[0];
-				val = gameBoard.board[p.x, p.y];
+				val = gameBoard.board[p.y, p.x];
 			}
 			switch (val)
 			{
 				case 0:
-					gameBoard.board[p.x, p.y] = 2;
+					gameBoard.board[p.y, p.x] = 2;
 					gameBoard.totalNum--;
 					goAgain = false;
 					return false;
 				case 1:
-					gameBoard.board[p.x, p.y] = 3;
+					gameBoard.board[p.y, p.x] = 3;
 					gameBoard.totalNum--;
 					gameBoard.numFilled--;
 					goAgain = true;
 					return true;
 				case 2:
-					gameBoard.board[p.x, p.y] = 2;
+					gameBoard.board[p.y, p.x] = 2;
 					goAgain = true;
 					return false;
 				case 3:
-					gameBoard.board[p.x, p.y] = 3;
+					gameBoard.board[p.y, p.x] = 3;
 					goAgain = true;
 					return true;
 				default: //never happens

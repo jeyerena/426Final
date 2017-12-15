@@ -84,7 +84,38 @@ namespace BattleShipServer.Models
 			MySqlConnection conn = GetConnection();
 			await mutex.WaitAsync();
 			conn.Open();
-			MySqlCommand cmd = new MySqlCommand($"select * from Matches where matchId = '{matchId}' and isUser1 = '{isUser1}' order by timeStamp desc limit 1;", conn);
+			MySqlCommand cmd = new MySqlCommand($"select * from Matches where matchId = '{matchId}' and isUser1 = '{Convert.ToInt32(isUser1)}' order by timeStamp desc limit 1;", conn);
+			MySqlDataReader reader = cmd.ExecuteReader();
+			while (reader.Read())
+			{
+				Match temp = new Match()
+				{
+					matchId = reader.GetInt32("matchId"),
+					isUser1 = reader.GetBoolean("isUser1"),
+					isFull = reader.GetBoolean("isFull"),
+					shipConfig = reader.GetString("shipConfig"),
+					xSize = reader.GetInt32("xSize"),
+					ySize = reader.GetInt32("ySize"),
+					gameState = reader.GetString("gameState"),
+					player1Changes = reader.GetString("player1Changes"),
+					player2Changes = reader.GetString("player2Changes"),
+					timeStamp = reader.GetDateTime("timeStamp")
+				};
+				temp.ReConstructState();
+				list.Add(temp);
+			}
+			conn.Close();
+			mutex.Release();
+			return list;
+		}
+
+		public async Task<List<Match>> GetMatch(int matchId)
+		{
+			List<Match> list = new List<Match>();
+			MySqlConnection conn = GetConnection();
+			await mutex.WaitAsync();
+			conn.Open();
+			MySqlCommand cmd = new MySqlCommand($"select * from Matches where matchId = '{matchId}' order by timeStamp desc limit 1;", conn);
 			MySqlDataReader reader = cmd.ExecuteReader();
 			while (reader.Read())
 			{
