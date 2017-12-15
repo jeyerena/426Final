@@ -30,6 +30,8 @@ namespace BattleShipServer.Models
 										"xSize integer," +
 										"ySize integer," +
 										"gameState blob," +
+										"player1Changes blob," +
+										"player2Changes blob," +
 										"timeStamp datetime)", conn);
 			cmd.ExecuteScalar();
 			conn.Close();
@@ -64,6 +66,8 @@ namespace BattleShipServer.Models
 					xSize = reader.GetInt32("xSize"),
 					ySize = reader.GetInt32("ySize"),
 					gameState = reader.GetString("gameState"),
+					player1Changes = reader.GetString("player1Changes"),
+					player2Changes = reader.GetString("player2Changes"),
 					timeStamp = reader.GetDateTime("timeStamp")
 				};
 				temp.ReConstructState();
@@ -93,6 +97,8 @@ namespace BattleShipServer.Models
 					xSize = reader.GetInt32("xSize"),
 					ySize = reader.GetInt32("ySize"),
 					gameState = reader.GetString("gameState"),
+					player1Changes = reader.GetString("player1Changes"),
+					player2Changes = reader.GetString("player2Changes"),
 					timeStamp = reader.GetDateTime("timeStamp")
 				};
 				temp.ReConstructState();
@@ -108,7 +114,15 @@ namespace BattleShipServer.Models
 			MySqlConnection conn = GetConnection();
 			await mutex.WaitAsync();
 			conn.Open();
-			MySqlCommand cmd = new MySqlCommand($"insert into Matches values(default, '{Convert.ToInt32(match.isUser1)}', '{Convert.ToInt32(match.isFull)}', '{match.shipConfig}', '{match.xSize}', '{match.ySize}', '{match.gameState}', '{match.timeStamp.ToString("yyyy/MM/dd HH:mm:ss")}');", conn);
+			MySqlCommand cmd = new MySqlCommand($"insert into Matches values(default, '{Convert.ToInt32(match.isUser1)}', " +
+																					$"'{Convert.ToInt32(match.isFull)}', " +
+																					$"'{match.shipConfig}', " +
+																					$"'{match.xSize}', " +
+																					$"'{match.ySize}', " +
+																					$"'{match.gameState}', " +
+																					$"'{match.player1Changes}', " +
+																					$"'{match.player2Changes}', " +
+																					$"'{match.timeStamp.ToString("yyyy/MM/dd HH:mm:ss")}');", conn);
 			cmd.ExecuteScalar();
 			cmd = new MySqlCommand($"select matchId from Matches order by timeStamp desc limit 1", conn);
 			match.matchId = Convert.ToInt32(cmd.ExecuteScalar());
@@ -127,6 +141,8 @@ namespace BattleShipServer.Models
 																	$"xSize = '{match.xSize}', " +
 																	$"ySize = '{match.ySize}', " +
 																	$"gameState = '{match.gameState}', " +
+																	$"player1Changes = '{match.player1Changes}', " +
+																	$"player2Changes = '{match.player2Changes}', " +
 																	$"timeStamp = '{match.timeStamp.ToString("yyyy/MM/dd HH:mm:ss")}' where matchId = '{match.matchId}';", conn);
 			cmd.ExecuteScalar();
 			conn.Close();

@@ -88,23 +88,23 @@ namespace BattleShipServer.Controllers
 				Match newMatch = Match.MakeNewMatch(board, config);
 				await context.AddNewMatch(newMatch);
 				cookieId = newMatch.matchId.ToString();
-				cookieUser = newMatch.isUser1.ToString();
+				cookieUser = "true";
 			}
 			else
 			{
 				matches[0].JoinMatch(board);
 				await context.UpdateMatchRecord(matches[0]);
 				cookieId = matches[0].matchId.ToString();
-				cookieUser = matches[0].isUser1.ToString();
+				cookieUser = "false";
 			}
 			mutex.Release();
 			CookieOptions option = new CookieOptions();
 			option.Expires = DateTime.Now.AddMinutes(2);
 			option.Path = "/Fire";
 			Response.Cookies.Delete("matchId");
-			Response.Cookies.Delete("isUser1");
+			Response.Cookies.Delete("isPlayer1");
 			Response.Cookies.Append("matchId", cookieId, option);
-			Response.Cookies.Append("isUser1", cookieUser, option);
+			Response.Cookies.Append("isPlayer1", cookieUser, option);
 			return new ObjectResult(board); //stub, currently just returns board object as json, board obj
         }
 
@@ -112,25 +112,22 @@ namespace BattleShipServer.Controllers
 		[Route("Fire")]
 		public async Task<IActionResult> FirePost([FromBody]Point p)
 		{
-			if (!HttpContext.Request.Cookies.ContainsKey("matchId") || !HttpContext.Request.Cookies.ContainsKey("isUser1"))
+			if (!HttpContext.Request.Cookies.ContainsKey("matchId") || !HttpContext.Request.Cookies.ContainsKey("isPlayer1"))
 				return new ObjectResult(new ResponseMessageObj("Oops, lost your cookie"));
 			string cookieId = HttpContext.Request.Cookies["matchId"];
-			string cookieUser = HttpContext.Request.Cookies["isUser1"];
+			string cookieUser = HttpContext.Request.Cookies["isPlayer1"];
 			int matchId = Convert.ToInt32(cookieId);
-			bool isUser1 = Convert.ToBoolean(cookieUser);
+			bool isPlayer1 = Convert.ToBoolean(cookieUser);
 
 			MatchDBContext context = HttpContext.RequestServices.GetService(typeof(MatchDBContext)) as MatchDBContext;
 
 			await mutex.WaitAsync();
-			List<Match> matches = await context.GetMatch(matchId, isUser1);
-			bool goAgain = false;
-			bool hit = false;
-			bool winCon = false;
+			List<Match> matches = await context.GetMatch(matchId, isPlayer1);
+			HitResult result = new HitResult(false, false, false);
 			if (matches.Count != 0)
 			{
-				hit = matches[0].hit(isUser1, p, out goAgain);
+				matches[0].hit(isPlayer1, p, out result);
 				await context.UpdateMatchRecord(matches[0]);
-				winCon = matches[0].hasWon(isUser1);
 			}
 			mutex.Release();
 
@@ -138,17 +135,34 @@ namespace BattleShipServer.Controllers
 			option.Expires = DateTime.Now.AddMinutes(2);
 			option.Path = "/Fire";
 			Response.Cookies.Delete("matchId");
-			Response.Cookies.Delete("isUser1");
+			Response.Cookies.Delete("isPlayer1");
 			Response.Cookies.Append("matchId", cookieId, option);
-			Response.Cookies.Append("isUser1", cookieUser, option);
-			return new ObjectResult(new HitResult(hit, goAgain, winCon));
+			Response.Cookies.Append("isPlayer1", cookieUser, option);
+			return new ObjectResult(result);
 		}
 
-		//[HttpPost]
-		//[Route("Fire/Poll")]
-		//public async Task<IActionResult> PollPost()
-		//{
-		//
-		//}
+		[HttpPost]
+		[Route("Fire/Poll")]
+		public async Task<IActionResult> PollPost()
+		{
+			if (!HttpContext.Request.Cookies.ContainsKey("matchId") || !HttpContext.Request.Cookies.ContainsKey("isPlayer1"))
+				return new ObjectResult(new ResponseMessageObj("Oops, lost your cookie"));
+			string cookieId = HttpContext.Request.Cookies["matchId"];
+			string cookieUser = HttpContext.Request.Cookies["isPlayer1"];
+			int matchId = Convert.ToInt32(cookieId);
+			bool isPlayer1 = Convert.ToBoolean(cookieUser);
+
+			MatchDBContext context = HttpContext.RequestServices.GetService(typeof(MatchDBContext)) as MatchDBContext;
+			BoardChangeHistory history = new BoardChangeHistory();
+			await mutex.WaitAsync();
+			List<Match> matches = await context.GetMatch(matchId, isPlayer1);
+			if (matches.Count != 0)
+			{
+				history = matches[0].getHistory(isPlayer1);
+				await context.UpdateMatchRecord(matches[0]);
+			}
+			mutex.Release();
+			return new ObjectResult(history);
+		}
     }
 }
