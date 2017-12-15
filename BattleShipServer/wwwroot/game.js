@@ -87,6 +87,7 @@ $(document).ready(function () {
         }
 
         xmlhttp.open("POST", '/Join');
+        xmlhttp.setRequestHeader("Content-Type", "application/json");        
         xmlhttp.send(txt);
     };
 
@@ -382,6 +383,7 @@ $(document).ready(function () {
         }
 
         xmlhttp.open("POST", '/Join');
+        xmlhttp.setRequestHeader("Content-Type", "application/json");        
         xmlhttp.send(txt);
 
         //Temporary preview
