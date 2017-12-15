@@ -12,6 +12,7 @@ namespace BattleShipServer.Models
 		public readonly int length;
 		public readonly bool isVertical;
 
+		//constructor for json serialization
 		public Ship(int x, int y, int length, bool isVertical)
 		{
 			this.x = x;

@@ -7,7 +7,8 @@ using BattleShipServer.Models;
 using System.Net;
 using System.IO;
 using Newtonsoft.Json;
-using System.Data.SqlClient;
+using MySql.Data.MySqlClient;
+using System.Data;
 
 namespace BattleShipServer.Controllers
 {
@@ -49,29 +50,44 @@ namespace BattleShipServer.Controllers
 			};
 		}
 
-		// POST Game/Join
+		[HttpGet]
+		[Route("logo.png")]
+		public FileResult GetLogo()
+		{
+			var imageFileStream = System.IO.File.OpenRead("wwwroot/logo.png");
+			return File(imageFileStream, "image/png");
+		}
+
+		[HttpGet]
+		[Route("splash.png")]
+		public FileResult GetSplash()
+		{
+			var imageFileStream = System.IO.File.OpenRead("wwwroot/splash.png");
+			return File(imageFileStream, "image/png");
+		}
+
+		// POST /Join
 		[HttpPost]
 		[Route("Join")]
         public IActionResult JoinPost([FromBody]GameConfig config)
         {
-			//needs to handle matchmaking
-			int id = 1; //gets this from database
 			GameBoard.ConstructBoard(config, out GameBoard board); //constructs board from config object
-			string jsonout = JsonConvert.SerializeObject(board); //serializes gameboard object to json and writes it to id.txt file
-			SqlConnection con = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;Database=matchdb;Integrated Security=True;Connect Timeout=30");
-			con.Open();
-			SqlCommand com = new SqlCommand("Select * from dbo.Matches", con);
-			SqlDataReader reader = com.ExecuteReader();
-			while (reader.Read())
+			MatchDBContext context = HttpContext.RequestServices.GetService(typeof(MatchDBContext)) as MatchDBContext;
+			List<Match> matches = context.GetAllMatches(); //go to MatchDBContext and code your own getter for some query
+			if (matches.Count == 0)
 			{
-				var obj1 = reader[0];
+				//need to create new match
+				context.AddNewMatch(Match.MakeNewMatch(board, config));
 			}
-			con.Close();
-			//no way to delete created files currently
+			else
+			{
+				matches[0].JoinMatch(board);
+				context.UpdateMatchRecord(matches[0]);
+			}
 			return new ObjectResult(board); //stub, currently just returns board object as json, board obj
         }
 
-		// POST Game/Fire
+		// POST /Fire
 		[HttpPost]
 		[Route("Fire")]
 		public ContentResult FirePost([FromBody]GameConfig config)

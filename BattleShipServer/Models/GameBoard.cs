@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,8 +8,7 @@ namespace BattleShipServer.Models
 {
     public class GameBoard
     {
-		private int[,] board; //private fields currently doesn't serialize
-		private GameConfig config;
+		public int[,] board;
 		public int numFilled;
 		public int totalNum;
 
@@ -17,14 +17,12 @@ namespace BattleShipServer.Models
 			board = new int[ySize, xSize];
 		}
 
-		public int this[int y, int x]
+		[JsonConstructor]
+		public GameBoard(int[,] board, int numFilled, int totalNum)
 		{
-			get { return board[y, x]; }
-		}
-
-		public bool Equals(GameBoard other)
-		{
-			return this.config.Equals(other.config);
+			this.board = board;
+			this.numFilled = numFilled;
+			this.totalNum = totalNum;
 		}
 
 		public static bool ConstructBoard(GameConfig config, out GameBoard board)
@@ -43,7 +41,6 @@ namespace BattleShipServer.Models
 					temp.numFilled += config.ships[i].length;
 				}
 			}
-			temp.config = config;
 			temp.totalNum = config.xSize * config.ySize;
 			board = temp;
 			return true;

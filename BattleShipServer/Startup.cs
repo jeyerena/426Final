@@ -15,9 +15,9 @@ namespace BattleShipServer
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
+		public Startup(IConfiguration configuration)
+		{
+			Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -26,6 +26,7 @@ namespace BattleShipServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+			services.Add(new ServiceDescriptor(typeof(MatchDBContext), new MatchDBContext(Configuration.GetConnectionString("DefaultConnection"))));
 		}
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

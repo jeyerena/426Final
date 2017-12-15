@@ -11,6 +11,7 @@ namespace BattleShipServer.Models
 		public readonly int xSize;
 		public readonly int ySize;
 
+		//for json serialization
 		public GameConfig(Ship[] ships, int xSize, int ySize)
 		{
 			this.ships = ships;
@@ -18,22 +19,19 @@ namespace BattleShipServer.Models
 			this.ySize = ySize;
 			Array.Sort<Ship>(ships, Ship.CompareShipSize);
 		}
+	}
 
-		public bool Equals(GameConfig other)
+	public class ShipConfig
+	{
+		public int[] lengths { get; set; }
+
+		public ShipConfig(GameConfig config)
 		{
-			if (this.xSize != other.xSize || this.ySize != other.ySize)
+			lengths = new int[config.ships.Length];
+			for (int i = 0; i < config.ships.Length; i++)
 			{
-				return false;
+				lengths[i] = config.ships[i].length;
 			}
-			if (this.ships.Length != other.ships.Length)
-			{
-				return false;
-			}
-			for (int i = 0; i < this.ships.Length; i++)
-			{
-				if (this.ships[i].length != other.ships[i].length) return false;
-			}
-			return true;
 		}
 	}
 }
