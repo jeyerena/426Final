@@ -5,18 +5,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace BattleShipServer.Models
 {
     public class MatchDBContext
     {
 		public string ConnectionString { get; set; }
-		private SemaphoreSlim mutex;
+		private static SemaphoreSlim mutex = new SemaphoreSlim(1, 1);
 
 		public MatchDBContext(string connectionString) //please check this query for correctness
 		{
 			this.ConnectionString = connectionString;
-			mutex = new SemaphoreSlim(1);
 			MySqlConnection conn = GetConnection();
 			conn.Open();
 			MySqlCommand cmd = new MySqlCommand("drop table if exists Matches;", conn);
@@ -73,6 +74,35 @@ namespace BattleShipServer.Models
 			return list;
 		}
 
+		public async Task<List<Match>> GetMatch(int matchId, bool isUser1)
+		{
+			List<Match> list = new List<Match>();
+			MySqlConnection conn = GetConnection();
+			await mutex.WaitAsync();
+			conn.Open();
+			MySqlCommand cmd = new MySqlCommand($"select * from Matches where matchId = '{matchId}' and isUser1 = '{isUser1}' order by timeStamp desc limit 1;", conn);
+			MySqlDataReader reader = cmd.ExecuteReader();
+			while (reader.Read())
+			{
+				Match temp = new Match()
+				{
+					matchId = reader.GetInt32("matchId"),
+					isUser1 = reader.GetBoolean("isUser1"),
+					isFull = reader.GetBoolean("isFull"),
+					shipConfig = reader.GetString("shipConfig"),
+					xSize = reader.GetInt32("xSize"),
+					ySize = reader.GetInt32("ySize"),
+					gameState = reader.GetString("gameState"),
+					timeStamp = reader.GetDateTime("timeStamp")
+				};
+				temp.ReConstructState();
+				list.Add(temp);
+			}
+			conn.Close();
+			mutex.Release();
+			return list;
+		}
+
 		public async Task AddNewMatch(Match match)
 		{
 			MySqlConnection conn = GetConnection();
@@ -80,6 +110,8 @@ namespace BattleShipServer.Models
 			conn.Open();
 			MySqlCommand cmd = new MySqlCommand($"insert into Matches values(default, '{Convert.ToInt32(match.isUser1)}', '{Convert.ToInt32(match.isFull)}', '{match.shipConfig}', '{match.xSize}', '{match.ySize}', '{match.gameState}', '{match.timeStamp.ToString("yyyy/MM/dd HH:mm:ss")}');", conn);
 			cmd.ExecuteScalar();
+			cmd = new MySqlCommand($"select matchId from Matches order by timeStamp desc limit 1", conn);
+			match.matchId = Convert.ToInt32(cmd.ExecuteScalar());
 			conn.Close();
 			mutex.Release();
 		}
@@ -111,5 +143,5 @@ namespace BattleShipServer.Models
 			conn.Close();
 			mutex.Release();
 		}
-    }
+	}
 }

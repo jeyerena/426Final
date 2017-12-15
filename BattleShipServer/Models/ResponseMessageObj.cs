@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 
 namespace BattleShipServer.Models
 {
-	public class InvalidInputObject
+	public class ResponseMessageObj
 	{
-		public string Error;
+		public string message;
 
-		public InvalidInputObject(string e)
+		public ResponseMessageObj(string m)
 		{
-			this.Error = e;
+			this.message = m;
 		}
     }
 }

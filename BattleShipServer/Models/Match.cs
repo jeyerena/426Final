@@ -51,6 +51,24 @@ namespace BattleShipServer.Models
 			timeStamp = DateTime.Now;
 			gameState = JsonConvert.SerializeObject(gameStateObj);
 		}
+
+		public bool hit(bool isUser1, Point p, out bool goAgain)
+		{
+			bool hasHit = gameStateObj.hit(isUser1, p, out goAgain);
+			if (!goAgain)
+			{
+				isUser1 = !isUser1;
+			}
+			return hasHit;
+		}
+
+		public bool hasWon(bool isUser1)
+		{
+			if (isUser1)
+				return gameStateObj.gameBoards[0].numFilled == 0;
+			else
+				return gameStateObj.gameBoards[1].numFilled == 0;
+		}
     }
 
 	class GameState
@@ -82,6 +100,47 @@ namespace BattleShipServer.Models
 		{
 			gameBoards[1] = player2Board;
 			isFull = true;
+		}
+
+		public bool hit(bool isUser1, Point p, out bool goAgain)
+		{
+			int val;
+			GameBoard gameBoard;
+			if (isUser1)
+			{
+				gameBoard = gameBoards[1];
+				val = gameBoard.board[p.x, p.y];
+			}
+			else
+			{
+				gameBoard = gameBoards[0];
+				val = gameBoard.board[p.x, p.y];
+			}
+			switch (val)
+			{
+				case 0:
+					gameBoard.board[p.x, p.y] = 2;
+					gameBoard.totalNum--;
+					goAgain = false;
+					return false;
+				case 1:
+					gameBoard.board[p.x, p.y] = 3;
+					gameBoard.totalNum--;
+					gameBoard.numFilled--;
+					goAgain = true;
+					return true;
+				case 2:
+					gameBoard.board[p.x, p.y] = 2;
+					goAgain = true;
+					return false;
+				case 3:
+					gameBoard.board[p.x, p.y] = 3;
+					goAgain = true;
+					return true;
+				default: //never happens
+					goAgain = false;
+					return false;
+			}
 		}
 	}
 }
