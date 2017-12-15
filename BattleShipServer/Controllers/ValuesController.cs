@@ -76,6 +76,7 @@ namespace BattleShipServer.Controllers
 		[Route("Join")]
         public async Task<IActionResult> JoinPost([FromBody]GameConfig config)
         {
+
 			if (!GameBoard.ConstructBoard(config, out GameBoard board)) return new ObjectResult(new ResponseMessageObj("you done fukd up son"));
 			MatchDBContext context = HttpContext.RequestServices.GetService(typeof(MatchDBContext)) as MatchDBContext;
 			string cookieId;
@@ -155,7 +156,7 @@ namespace BattleShipServer.Controllers
 			MatchDBContext context = HttpContext.RequestServices.GetService(typeof(MatchDBContext)) as MatchDBContext;
 			BoardChangeHistory history = new BoardChangeHistory();
 			await mutex.WaitAsync();
-			List<Match> matches = await context.GetMatch(matchId, isPlayer1);
+			List<Match> matches = await context.GetMatch(matchId);
 			if (matches.Count != 0)
 			{
 				history = matches[0].getHistory(isPlayer1);
