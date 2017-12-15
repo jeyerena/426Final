@@ -7,7 +7,7 @@ $(document).ready(function () {
     var ships = [];
     var tablewidth = 0;
     var tableheight = 0;
-    var myTurn = false;
+    var myTurn;
 
     var firePath = '/Fire';
     var pollPath = '/Fire/Poll';
@@ -32,7 +32,7 @@ $(document).ready(function () {
 
     function poll() {
         myTurn = false;
-        var turn = '';
+        var turn = JSON.stringify('');
         var xmlhttp = new XMLHttpRequest();
 
         xmlhttp.onreadystatechange = function(){
@@ -41,6 +41,7 @@ $(document).ready(function () {
                 updateBoard(ans);
             }
         };
+
         xmlhttp.open("POST", pollPath);
         xmlhttp.setRequestHeader("Content-Type", "application/json");
         xmlhttp.send(turn);
@@ -119,7 +120,6 @@ $(document).ready(function () {
     }
 
     function placeShips(position, shipJSON) {
-        setTimeout(poll(), 1000);
         var ships = JSON.parse(shipJSON);
         if (!Array.isArray(ships)) {
             ships = [ships];
@@ -180,25 +180,37 @@ $(document).ready(function () {
                 }
             }
         }
+        var cookie = Document.cookies;
+        cookie = cookie.split(';')[1];
+        cookie = cookie.split('=')[1];
+        if (cookie == 'true'){
+            myTurn = true;
+        }
+        else{
+            myTurn = false;
+            setTimeout(poll(), 1000);            
+        }
     };
 
     function updateBoard(coordList){
-        if (ans.hasOwnProperty('Message')){
+        if (coordList.hasOwnProperty('Message')){
             setTimeout(poll(), 1000);
             return;
         }
 
-        for(var i = 0; i < ans.length; i++){
-            var hit = ans[i]['enemyResult'];
-            var pos = ans[i]['hitPos'];
+        for(var i = 0; i < coordList.length; i++){
+            var hit = coordList[i]['enemyResult'];
+            var pos = coordList[i]['hitPos'];
             var cellID = 'bottom-' + pos['x'] + ',' + pos['y'];
             var cell = document.getElementById(cellID);
             if (hit['winCon']){
                 loseon();
+                return;
             }
             if (hit['hasHit'] && hit['goAgain']){
                 if (cell.classList.contains(playerShip)){
-                    cell.classList.toggle('hit')                    
+                    cell.classList.toggle('hit')    
+                    setTimeout(poll(), 1000);                            
                 }
             }
             if (!hit['hasHit'] && !hit['goAgain']){
@@ -209,9 +221,11 @@ $(document).ready(function () {
             }
             if (!hit['hasHit'] && hit['goAgain']){
                 if (!cell.classList.contains(playerShip)){
+                    setTimeout(poll(), 1000);                    
                 }
             }
         }
+        setTimeout(poll(), 1000);        
     };
 
     function radar(hit){
@@ -220,7 +234,7 @@ $(document).ready(function () {
         }
 
         if (hit['winCon']){
-            winon()
+            winon();
         }
         if (hit['hasHit'] && hit['goAgain']){
             document.getElementById(cellID).classList.toggle(enemyship);            
@@ -243,21 +257,20 @@ $(document).ready(function () {
     };
 
     function shot() {
-        if (!myTurn){
-            return;
-        }
-		var message = document.createElement('p');
-         message.innerHTML = 'Test!';
-		 message.classList.toggle('fifth-text');
-         document.getElementById('events').appendChild(message);
+        // if (!myTurn){
+        //     return;
+        // // }
+		// var message = document.createElement('p');
+        //  message.innerHTML = 'Test!';
+		//  message.classList.toggle('fifth-text');
+        //  document.getElementById('events').appendChild(message);
             //   this.className = '';
         if (this.classList.contains(enemyship) || this.classList.contains(missedShot)) {
             return;
         }
         //remove me
         this.classList.toggle(enemyShip);
-        radar(this.id)
-
+        
         var coordinates = cellID.split('-', 1)[1];
         var cell = {};
         cell['x'] = coordinates.split(',')[0];
