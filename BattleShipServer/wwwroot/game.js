@@ -4,7 +4,7 @@ $(document).ready(function () {
     var enemyShip = 'w3-red'; //change only when hit
     var missedShot = 'w3-yellow';
 
-    var theShips = [];
+    var ships = [];
     var tablewidth = 0;
     var tableheight = 0;
     var myTurn = false;
@@ -22,14 +22,28 @@ $(document).ready(function () {
     confbutton.style.visibility = "hidden";
     confbutton.style.display = "none";
 
-	
-
     document.getElementById('unhidem').onclick = function () {
         var div = document.getElementById('lCreation');
         div.style.visibility = "hidden";
         div.style.display = "none";
         initdiv.style.visibility = "visible";
         initdiv.style.display = "block";
+    };
+
+    function poll() {
+        myTurn = False;
+        var turn = '';
+        var xmlhttp = new XMLHttpRequest();
+
+        xmlhttp.onreadystatechange = function(){
+            if (xmlhttp.readyState == XMLHttpRequest.DONE){
+                var ans = JSON.parse(xmlhttp.responseText);
+                updateBoard(ans);
+            }
+        }
+        xmlhttp.open("POST", poll);
+        xmlhttp.setRequestHeader("Content-Type", "application/json");
+        xmlhttp.send(turn);
     };
 
     document.getElementById('build').onclick = function () {
@@ -49,19 +63,19 @@ $(document).ready(function () {
         }
         //have it receive the normal player data from the server
         //or pullit from previous 'page'
-        var tmp = [];
-        tmp.push({ 'x': 0, 'y': 0, 'length': 2, 'isVertical': false });
-        tmp.push({ 'x': 3, 'y': 0, 'length': 3, 'isVertical': true });
-        tmp.push({ 'x': 6, 'y': 0, 'length': 4, 'isVertical': false });
-        tmp.push({ 'x': 0, 'y': 2, 'length': 4, 'isVertical': true });
-        tmp.push({ 'x': 5, 'y': 2, 'length': 3, 'isVertical': false });
-        tmp.push({ 'x': 9, 'y': 2, 'length': 2, 'isVertical': true });
-        tmp.push({ 'x': 0, 'y': 7, 'length': 2, 'isVertical': false });
-        tmp.push({ 'x': 5, 'y': 5, 'length': 2, 'isVertical': true });
-        tmp.push({ 'x': 9, 'y': 5, 'length': 3, 'isVertical': true });
-        tmp.push({ 'x': 5, 'y': 9, 'length': 6, 'isVertical': false });
-
-        var sendOff = { tmp, "xSize": tablewidth, "ySize": tableheight };
+        ships.push({ 'x': 0, 'y': 0, 'length': 2, 'isVertical': false });
+        ships.push({ 'x': 3, 'y': 0, 'length': 3, 'isVertical': true });
+        ships.push({ 'x': 6, 'y': 0, 'length': 4, 'isVertical': false });
+        ships.push({ 'x': 0, 'y': 2, 'length': 4, 'isVertical': true });
+        ships.push({ 'x': 5, 'y': 2, 'length': 3, 'isVertical': false });
+        ships.push({ 'x': 9, 'y': 2, 'length': 2, 'isVertical': true });
+        ships.push({ 'x': 0, 'y': 7, 'length': 2, 'isVertical': false });
+        ships.push({ 'x': 5, 'y': 5, 'length': 2, 'isVertical': true });
+        ships.push({ 'x': 9, 'y': 5, 'length': 3, 'isVertical': true });
+        ships.push({ 'x': 5, 'y': 9, 'length': 6, 'isVertical': false });
+        
+        var sendOff = { ships, "xSize": tablewidth, "ySize": tableheight };
+        var txt = JSON.stringify(sendOff);
         var xmlhttp = new XMLHttpRequest();
 
         xmlhttp.onreadystatechange = function(){
@@ -73,7 +87,7 @@ $(document).ready(function () {
         xmlhttp.open("POST", '/Join');
         xmlhttp.send(txt);
 
-        placeShips('bottom', JSON.stringify(tmp));
+        placeShips('bottom', JSON.stringify(ships));
     };
 
     function tableCreate(num, position) {
@@ -198,21 +212,6 @@ $(document).ready(function () {
             }
         }
     };
-	
-    function poll() {
-        var turn = '';
-        var xmlhttp = new XMLHttpRequest();
-
-        xmlhttp.onreadystatechange = function(){
-            if (xmlhttp.readyState == XMLHttpRequest.DONE){
-                var ans = JSON.parse(xmlhttp.responseText);
-                updateBoard(ans);
-            }
-        }
-        xmlhttp.open("POST", poll);
-        xmlhttp.setRequestHeader("Content-Type", "application/json");
-        xmlhttp.send(turn);
-    }
 
     function radar(hit){
         if (hit.hasOwnProperty('Message')){
@@ -361,7 +360,7 @@ $(document).ready(function () {
                 shipScan(xPos, yPos);
             }
         }
-        var sendOff = { theShips, "xSize": tablewidth, "ySize": tableheight };
+        var sendOff = { ships, "xSize": tablewidth, "ySize": tableheight };
         $("#sendoff").remove();
         var tab = document.getElementById('table-middle');
         var tiles = tab.getElementsByTagName('td');
@@ -369,7 +368,7 @@ $(document).ready(function () {
             var tile = tiles[i];
             tile.onclick = "";
         }
-        console.log(theShips);
+        console.log(ships);
         console.log(sendOff);
 
         var txt = JSON.stringify(sendOff);
@@ -398,7 +397,7 @@ $(document).ready(function () {
             var cell = cells[i];
             cell.onclick = shot;
         }
-        placeShips('bottom', JSON.stringify(theShips));
+        placeShips('bottom', JSON.stringify(ships));
     };
 
     function selected() {
@@ -583,7 +582,7 @@ $(document).ready(function () {
             "length": shipLen,
             "isVertical": isVert
         }
-        theShips.push(currShip);
+        ships.push(currShip);
 
     };
 
