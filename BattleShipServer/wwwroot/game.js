@@ -9,8 +9,8 @@ $(document).ready(function () {
     var tableheight = 0;
     var myTurn = false;
 
-    var fire = '/Fire';
-    var poll = '/Fire/Poll';
+    var firePath = '/Fire';
+    var pollPath = '/Fire/Poll';
 	
 	//var theSocket = new WebSocket("http://testserver4-ztong.cloudapps.unc.edu/");
 	
@@ -31,7 +31,7 @@ $(document).ready(function () {
     };
 
     function poll() {
-        myTurn = False;
+        myTurn = false;
         var turn = '';
         var xmlhttp = new XMLHttpRequest();
 
@@ -40,8 +40,8 @@ $(document).ready(function () {
                 var ans = JSON.parse(xmlhttp.responseText);
                 updateBoard(ans);
             }
-        }
-        xmlhttp.open("POST", poll);
+        };
+        xmlhttp.open("POST", pollPath);
         xmlhttp.setRequestHeader("Content-Type", "application/json");
         xmlhttp.send(turn);
     };
@@ -74,6 +74,8 @@ $(document).ready(function () {
         ships.push({ 'x': 9, 'y': 5, 'length': 3, 'isVertical': true });
         ships.push({ 'x': 5, 'y': 9, 'length': 6, 'isVertical': false });
         
+        placeShips('bottom', JSON.stringify(ships));
+        
         var sendOff = { ships, "xSize": tablewidth, "ySize": tableheight };
         var txt = JSON.stringify(sendOff);
         var xmlhttp = new XMLHttpRequest();
@@ -86,8 +88,6 @@ $(document).ready(function () {
 
         xmlhttp.open("POST", '/Join');
         xmlhttp.send(txt);
-
-        placeShips('bottom', JSON.stringify(ships));
     };
 
     function tableCreate(num, position) {
@@ -270,7 +270,7 @@ $(document).ready(function () {
                 radar(hit);
             }
         }
-        xmlhttp.open("POST", fire);
+        xmlhttp.open("POST", firePath);
         xmlhttp.setRequestHeader("Content-Type", "application/json");
         xmlhttp.send(cell);
     };
