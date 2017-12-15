@@ -70,12 +70,12 @@ namespace BattleShipServer.Models
 			if (isUser1)
 			{
 				changes2Obj.changes.Add(new Change(result, p));
-				player2Changes = JsonConvert.SerializeObject(changes2Obj);
+				player2Changes = JsonConvert.SerializeObject(changes2Obj.changes.ToArray<Change>());
 			}
 			else
 			{
 				changes1Obj.changes.Add(new Change(result, p));
-				player1Changes = JsonConvert.SerializeObject(changes1Obj);
+				player1Changes = JsonConvert.SerializeObject(changes1Obj.changes.ToArray<Change>());
 			}
 		}
 

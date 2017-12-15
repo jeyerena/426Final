@@ -8,7 +8,17 @@ namespace BattleShipServer.Models
 {
 	public class ChangeHistory
 	{
-		public List<Change> changes = new List<Change>();
+		public List<Change> changes;
+
+		public ChangeHistory(List<Change> changes)
+		{
+			this.changes = changes;
+		}
+
+		public ChangeHistory()
+		{
+			changes = new List<Change>();
+		}
 	}
 
 	public class Change
