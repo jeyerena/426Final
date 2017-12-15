@@ -151,8 +151,20 @@ $(document).ready(function () {
         }
     }
 	
-    function radar(cellID) {
-        var coordinates = cellID.split('-', 1)[1];
+
+    function shot() {
+		var message = document.createElement('p');
+         message.innerHTML = 'Miss!';
+		 message.classList.toggle('fifth-text');
+         document.getElementById('events').appendChild(message);
+              this.className = '';
+        if (this.classList.contains(enemyship) || this.classList.contains(missedShot)) {
+            return;
+        }
+        //remove me
+        this.classList.toggle(enemyShip);
+
+        var coordinates = this.id.split('-', 1)[1];
         var cell = {};
         cell['x'] = coordinates.split(',')[0];
         cell['y'] = coordinates.split(',')[1];
@@ -182,26 +194,6 @@ $(document).ready(function () {
 				
             default:
                 ;
-        }
-         //display message based on server response
-         //var message = document.createElement('p');
-         //message.innerHTML = 'Hit!';
-         //document.getElementById('events').appendChild(message);
-         //    this.className = '';
-    }
-
-    function shot() {
-		var message = document.createElement('p');
-         message.innerHTML = 'Miss!';
-		 message.classList.toggle('fifth-text');
-         document.getElementById('events').appendChild(message);
-              this.className = '';
-        if (this.classList.contains(enemyship) || this.classList.contains(missedShot)) {
-            return;
-        }
-        //remove me
-        this.classList.toggle(enemyShip);
-        radar(this.id);
     }
 	
 	function winon () {
