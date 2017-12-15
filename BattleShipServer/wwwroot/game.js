@@ -32,7 +32,7 @@ $(document).ready(function () {
 
     function poll() {
         myTurn = false;
-        var turn = '';
+        var turn = JSON.stringify('');
         var xmlhttp = new XMLHttpRequest();
 
         xmlhttp.onreadystatechange = function(){
@@ -183,14 +183,14 @@ $(document).ready(function () {
     };
 
     function updateBoard(coordList){
-        if (ans.hasOwnProperty('Message')){
+        if (coordList.hasOwnProperty('Message')){
             setTimeout(poll(), 1000);
             return;
         }
 
-        for(var i = 0; i < ans.length; i++){
-            var hit = ans[i]['enemyResult'];
-            var pos = ans[i]['hitPos'];
+        for(var i = 0; i < coordList.length; i++){
+            var hit = coordList[i]['enemyResult'];
+            var pos = coordList[i]['hitPos'];
             var cellID = 'bottom-' + pos['x'] + ',' + pos['y'];
             var cell = document.getElementById(cellID);
             if (hit['winCon']){
